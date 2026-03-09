@@ -93,18 +93,21 @@
 <style>
 .dashboard-header {
     margin-bottom: 30px;
+    animation: slideInDown 0.5s ease-out;
 }
 
 .dashboard-header h1 {
     margin: 0 0 10px 0;
     font-size: 2em;
-    color: #333;
+    color: var(--primary-color);
+    animation: slideInLeft 0.6s ease-out;
 }
 
 .dashboard-header p {
     margin: 0;
-    color: #666;
+    color: var(--navbar-text);
     font-size: 1.1em;
+    animation: slideInLeft 0.7s ease-out;
 }
 
 .stats-grid {
@@ -115,45 +118,67 @@
 }
 
 .stat-card {
-    background: white;
-    border: 1px solid #e0e0e0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 20px;
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    animation: slideInUp 0.5s ease-out;
 }
 
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
 .stat-card:hover {
-    box-shadow: 0 4px 12px rgba(42, 115, 255, 0.1);
-    border-color: #2A73FF;
+    box-shadow: 0 8px 16px rgba(42, 115, 255, 0.2);
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+}
+
+html.dark-mode .stat-card:hover {
+    box-shadow: 0 8px 16px rgba(42, 115, 255, 0.3);
 }
 
 .stat-icon {
     font-size: 2.5em;
     margin-right: 20px;
+    animation: bounce 2s ease-in-out infinite;
 }
+
+.stat-card:nth-child(1) .stat-icon { animation-delay: 0s; }
+.stat-card:nth-child(2) .stat-icon { animation-delay: 0.2s; }
+.stat-card:nth-child(3) .stat-icon { animation-delay: 0.4s; }
+.stat-card:nth-child(4) .stat-icon { animation-delay: 0.6s; }
 
 .stat-content h3 {
     margin: 0 0 5px 0;
     font-size: 0.9em;
-    color: #666;
+    color: var(--navbar-text);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .stat-value {
     margin: 0;
     font-size: 2em;
     font-weight: bold;
-    color: #2A73FF;
+    color: var(--primary-color);
 }
 
 .quick-actions {
     margin-bottom: 40px;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .quick-actions h2 {
     margin-bottom: 20px;
+    color: var(--text-color);
+    animation: slideInLeft 0.5s ease-out;
 }
 
 .action-buttons {
@@ -165,38 +190,25 @@
 .action-buttons .btn {
     flex: 1;
     min-width: 150px;
+    animation: slideInUp 0.5s ease-out;
 }
 
+.action-buttons .btn:nth-child(1) { animation-delay: 0.1s; }
+.action-buttons .btn:nth-child(2) { animation-delay: 0.2s; }
+.action-buttons .btn:nth-child(3) { animation-delay: 0.3s; }
+.action-buttons .btn:nth-child(4) { animation-delay: 0.4s; }
+
 .recent-activity {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 20px;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.5s ease-out;
 }
 
 .recent-activity h2 {
     margin-top: 0;
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th {
-    background: #f5f5f5;
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.table td {
-    padding: 12px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.table tr:hover {
-    background: #f9f9f9;
+    color: var(--text-color);
 }
 
 .badge {
@@ -205,11 +217,47 @@
     border-radius: 4px;
     font-size: 0.85em;
     font-weight: 600;
+    animation: pulse 2s ease-in-out infinite;
 }
 
 .badge-success {
-    background: #d4edda;
-    color: #155724;
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.badge-danger {
+    background: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.badge-warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ff9800;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.text-muted {
+    color: var(--navbar-text);
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.5em;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .btn {
+        min-width: auto;
+    }
 }
 </style>
 {% endblock %}

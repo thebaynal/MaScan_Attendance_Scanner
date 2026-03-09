@@ -1,11 +1,53 @@
 /* Main JavaScript Utilities */
 
+// Theme Management
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const html = document.documentElement;
+    
+    if (savedTheme === 'dark') {
+        html.classList.add('dark-mode');
+        updateThemeIcon();
+    }
+    
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+}
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const isDarkMode = html.classList.toggle('dark-mode');
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    updateThemeIcon();
+}
+
+function updateThemeIcon() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    
+    const isDarkMode = document.documentElement.classList.contains('dark-mode');
+    themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+    themeToggle.style.animation = 'spin 0.4s ease-out';
+    setTimeout(() => {
+        themeToggle.style.animation = '';
+    }, 400);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize theme
+    initTheme();
+    
     // Auto-hide alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
-            alert.style.display = 'none';
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 300);
         }, 5000);
     });
 });
@@ -15,8 +57,13 @@ function showSuccess(message) {
     const div = document.createElement('div');
     div.className = 'alert alert-success';
     div.textContent = message;
+    div.style.animation = 'slideInDown 0.3s ease-out';
     document.querySelector('.container').insertBefore(div, document.querySelector('.container').firstChild);
-    setTimeout(() => div.remove(), 3000);
+    setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(-20px)';
+        setTimeout(() => div.remove(), 300);
+    }, 3000);
 }
 
 // Show error message
@@ -24,7 +71,13 @@ function showError(message) {
     const div = document.createElement('div');
     div.className = 'alert alert-danger';
     div.textContent = message;
+    div.style.animation = 'slideInDown 0.3s ease-out';
     document.querySelector('.container').insertBefore(div, document.querySelector('.container').firstChild);
+    setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(-20px)';
+        setTimeout(() => div.remove(), 5000);
+    }, 5000);
 }
 
 // Fetch API helper

@@ -62,11 +62,15 @@
 .scanner-container {
     max-width: 800px;
     margin: 0 auto;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .scanner-container h1 {
     text-align: center;
     margin-bottom: 30px;
+    color: var(--primary-color);
+    font-size: 2em;
+    animation: slideInDown 0.5s ease-out;
 }
 
 .scanner-setup {
@@ -74,74 +78,100 @@
     grid-template-columns: 1fr 1fr;
     gap: 15px;
     margin-bottom: 30px;
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
+    box-shadow: var(--shadow);
+    animation: slideInUp 0.5s ease-out;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+    animation: fadeIn 0.4s ease-out;
 }
 
 .form-group label {
     margin-bottom: 5px;
     font-weight: 600;
-    color: #333;
+    color: var(--text-color);
 }
 
 .form-group select {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     font-size: 1em;
+    background: var(--input-bg);
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
 }
 
 .scanner-area {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
     text-align: center;
+    box-shadow: var(--shadow);
+    animation: slideInUp 0.5s ease-out 0.1s backwards;
 }
 
 #qr-reader {
-    border: 2px solid #2A73FF;
+    border: 3px solid var(--primary-color);
     border-radius: 8px;
     overflow: hidden;
+    animation: pulse 2s ease-in-out infinite;
 }
 
 .scanner-status {
     margin-top: 15px;
-    padding: 10px;
-    background: #e3f2fd;
-    color: #0d47a1;
+    padding: 12px;
+    background: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
     border-radius: 4px;
     text-align: center;
+    animation: fadeIn 0.3s ease-out;
+    border-left: 3px solid var(--primary-color);
 }
 
 .scanner-input {
     display: flex;
     gap: 10px;
     margin-bottom: 30px;
+    animation: slideInUp 0.5s ease-out 0.2s backwards;
 }
 
 .scanner-input input {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 12px;
+    border: 2px solid var(--input-border);
     border-radius: 4px;
     font-size: 1em;
+    background: var(--input-bg);
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+.scanner-input input::placeholder {
+    color: var(--navbar-text);
 }
 
 .scanner-input input:focus {
     outline: none;
-    border-color: #2A73FF;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 #submit-btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
 }
 
 .result-message {
@@ -149,30 +179,35 @@
     padding: 15px;
     border-radius: 4px;
     display: none;
+    animation: slideInDown 0.3s ease-out;
+    border-left: 4px solid transparent;
 }
 
 .result-message.success {
     display: block;
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-left-color: #28a745;
 }
 
 .result-message.error {
     display: block;
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-left-color: #dc3545;
 }
 
 .marked-list {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 20px;
+    box-shadow: var(--shadow);
+    animation: slideInUp 0.5s ease-out 0.3s backwards;
 }
 
 .marked-list h2 {
     margin-top: 0;
+    color: var(--text-color);
 }
 
 .marked-list table {
@@ -180,21 +215,27 @@
     border-collapse: collapse;
 }
 
-.marked-list th {
-    background: #f5f5f5;
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.marked-list td {
-    padding: 12px;
-    border-bottom: 1px solid #e0e0e0;
+.marked-list tbody tr {
+    animation: fadeIn 0.3s ease-out;
 }
 
 .marked-list tbody tr:hover {
-    background: #f9f9f9;
+    background: var(--table-hover);
+    transform: scale(1.01);
+}
+
+@media (max-width: 600px) {
+    .scanner-setup {
+        grid-template-columns: 1fr;
+    }
+
+    .scanner-container h1 {
+        font-size: 1.5em;
+    }
+
+    .scanner-input {
+        flex-direction: column;
+    }
 }
 </style>
 {% endblock %}
