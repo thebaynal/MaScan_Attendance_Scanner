@@ -134,6 +134,8 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
 /* Upload Card */
 .qr-upload-card {
     margin-bottom: 30px;
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(42, 115, 255, 0.02) 100%);
+    border: 1px solid rgba(42, 115, 255, 0.1);
 }
 
 .qr-upload-card h2 {
@@ -141,18 +143,23 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--primary-color);
+    font-size: 1.35em;
 }
 
 .info-text {
     color: var(--navbar-text);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-size: 0.95em;
+    line-height: 1.5;
 }
 
 .csv-template-info {
     background: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    margin-bottom: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    overflow: hidden;
 }
 
 .csv-template-info details {
@@ -164,54 +171,73 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
     font-weight: 600;
     color: var(--primary-color);
     transition: all 0.3s ease;
+    outline: none;
+    padding: 5px;
+    border-radius: 4px;
 }
 
 .csv-template-info summary:hover {
     color: #1e52cc;
+    background: rgba(42, 115, 255, 0.05);
+}
+
+.csv-template-info details[open] summary {
+    margin-bottom: 5px;
 }
 
 .format-details {
-    padding-top: 15px;
+    padding: 0 15px 15px 15px;
     border-top: 1px solid var(--border-color);
-    margin-top: 10px;
+    margin-top: 0;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.format-details p {
+    margin-bottom: 10px;
+    font-size: 0.95em;
 }
 
 .format-details ul {
     list-style-position: inside;
     margin-bottom: 15px;
     line-height: 1.8;
+    padding-left: 5px;
 }
 
 .format-details code {
     background: var(--card-bg);
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 3px 7px;
+    border-radius: 4px;
     font-family: 'Courier New', monospace;
     color: var(--primary-color);
+    font-size: 0.9em;
+    font-weight: 500;
 }
 
 .format-details pre {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 12px;
     overflow-x: auto;
-    font-size: 0.9em;
-    line-height: 1.4;
+    font-size: 0.85em;
+    line-height: 1.5;
+    margin-top: 10px;
 }
 
 /* File Input */
 .upload-form {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: stretch;
 }
 
 .file-input-wrapper {
-    flex: 1;
-    min-width: 300px;
+    display: flex;
+    flex-direction: column;
     position: relative;
+    grid-column: 1 / -1;
 }
 
 #csv-file {
@@ -219,99 +245,122 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
 }
 
 .file-label {
-    display: block;
-    padding: 30px 20px;
-    border: 2px dashed var(--primary-color);
-    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 25px;
+    border: 2.5px dashed var(--primary-color);
+    border-radius: 12px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: rgba(42, 115, 255, 0.02);
+    background: linear-gradient(135deg, rgba(42, 115, 255, 0.05), rgba(42, 115, 255, 0.01));
+    min-height: 150px;
 }
 
 .file-label:hover {
-    background: rgba(42, 115, 255, 0.08);
+    background: linear-gradient(135deg, rgba(42, 115, 255, 0.15), rgba(42, 115, 255, 0.08));
     border-color: #1e52cc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(42, 115, 255, 0.15);
 }
 
 .file-icon {
-    font-size: 2em;
+    font-size: 2.5em;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.file-label:hover .file-icon {
+    transform: scale(1.15) rotate(5deg);
 }
 
 .file-label span:last-child {
     display: block;
     color: var(--text-color);
     font-weight: 500;
+    font-size: 0.95em;
+    line-height: 1.4;
 }
 
 .file-selected-info {
-    margin-top: 10px;
-    padding: 12px 15px;
-    background: rgba(40, 167, 69, 0.1);
-    border: 1px solid rgba(40, 167, 69, 0.3);
-    border-radius: 6px;
-    animation: slideInUp 0.2s ease-out;
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+    border: 1.5px solid rgba(40, 167, 69, 0.35);
+    border-radius: 8px;
+    animation: slideInUp 0.3s ease-out;
+    grid-column: 1 / -1;
 }
 
 .selected-file-details {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .file-check-icon {
     color: #28a745;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.3em;
     flex-shrink: 0;
 }
 
 .file-info {
     flex: 1;
-    min-width: 0;
+    min-width: 150px;
+    text-align: left;
 }
 
 .file-name {
-    font-weight: 600;
-    color: #28a745;
+    font-weight: 700;
+    color: var(--text-color);
     word-break: break-word;
     font-size: 0.95em;
+    margin-bottom: 3px;
 }
 
 .file-size {
-    font-size: 0.85em;
-    color: #6c757d;
-    margin-top: 2px;
+    font-size: 0.82em;
+    color: var(--navbar-text);
+    margin-top: 3px;
 }
 
 .clear-file-btn {
-    background: rgba(220, 53, 69, 0.1);
-    border: 1px solid rgba(220, 53, 69, 0.3);
+    background: rgba(220, 53, 69, 0.12);
+    border: 1.5px solid rgba(220, 53, 69, 0.35);
     color: #dc3545;
-    padding: 6px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
     transition: all 0.2s ease;
     flex-shrink: 0;
+    font-size: 0.95em;
 }
 
 .clear-file-btn:hover {
     background: rgba(220, 53, 69, 0.2);
     border-color: rgba(220, 53, 69, 0.5);
+    transform: scale(1.05);
 }
 
 .upload-btn {
     white-space: nowrap;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    padding: 12px 22px;
+    font-size: 0.95em;
+    height: fit-content;
 }
 
 .btn-icon {
-    font-size: 1.1em;
+    font-size: 1.15em;
 }
 
 /* Progress */
@@ -542,7 +591,42 @@ html.dark-mode .qr-code-card:hover {
     }
 
     .upload-form {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .upload-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .file-label {
+        padding: 35px 20px;
+        min-height: 130px;
+    }
+
+    .file-icon {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+    }
+
+    .file-label span:last-child {
+        font-size: 0.9em;
+    }
+
+    .file-selected-info {
+        margin-top: 10px;
+        padding: 12px 14px;
+    }
+
+    .selected-file-details {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .clear-file-btn {
+        align-self: flex-start;
     }
 
     .qr-card-header {
@@ -561,27 +645,146 @@ html.dark-mode .qr-code-card:hover {
     .qr-codes-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
-
-    .file-label {
-        padding: 20px 15px;
-    }
 }
 
 @media (max-width: 480px) {
+    .qr-management-container {
+        padding: 15px;
+    }
+
     .qr-header h1 {
         font-size: 1.5em;
     }
 
+    .qr-header {
+        margin-bottom: 30px;
+    }
+
+    .qr-header p {
+        font-size: 0.95em;
+    }
+
+    .qr-upload-card {
+        padding: 16px;
+    }
+
+    .qr-upload-card h2 {
+        font-size: 1.2em;
+        margin-bottom: 12px;
+    }
+
+    .info-text {
+        margin-bottom: 16px;
+        font-size: 0.9em;
+    }
+
     .csv-template-info {
-        margin-bottom: 15px;
+        margin-bottom: 16px;
+    }
+
+    .csv-template-info details {
+        padding: 12px;
+    }
+
+    .csv-template-info summary {
+        font-size: 0.9em;
+    }
+
+    .format-details {
+        padding: 0 12px 12px 12px;
+    }
+
+    .format-details ul {
+        font-size: 0.9em;
+    }
+
+    .format-details pre {
+        font-size: 0.75em;
+        padding: 10px;
+    }
+
+    .upload-form {
+        gap: 8px;
+    }
+
+    .file-label {
+        padding: 30px 15px;
+        min-height: 120px;
+        margin-bottom: 8px;
+    }
+
+    .file-icon {
+        font-size: 2em;
+        margin-bottom: 8px;
+    }
+
+    .file-label span:last-child {
+        font-size: 0.85em;
+    }
+
+    .file-selected-info {
+        margin-top: 8px;
+        padding: 10px 12px;
+    }
+
+    .selected-file-details {
+        gap: 8px;
+    }
+
+    .file-check-icon {
+        font-size: 1.1em;
+    }
+
+    .file-name {
+        font-size: 0.9em;
+    }
+
+    .file-size {
+        font-size: 0.75em;
+    }
+
+    .upload-btn {
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 0.9em;
+    }
+
+    .btn-icon {
+        font-size: 1em;
     }
 
     .qr-codes-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .qr-actions {
         flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    .qr-header h1 {
+        font-size: 1.3em;
+    }
+
+    .file-label {
+        padding: 25px 12px;
+        min-height: 110px;
+    }
+
+    .file-icon {
+        font-size: 1.8em;
+    }
+
+    .file-label span:last-child {
+        font-size: 0.8em;
+    }
+
+    .upload-btn {
+        padding: 8px 12px;
+        font-size: 0.85em;
     }
 }
 </style>
@@ -742,6 +945,7 @@ async function loadQRCodes() {
             data.qr_codes.forEach(qr => {
                 const card = document.createElement('div');
                 card.className = 'qr-code-card';
+                card.setAttribute('data-school-id', qr.school_id);
                 card.innerHTML = `
                     <div class="qr-code-content">
                         <img src="data:image/png;base64,${qr.qr_image}" alt="QR Code" class="qr-code-img">
@@ -782,24 +986,44 @@ function downloadSingleQR(schoolId) {
 
 // Delete QR code
 async function deleteQRCode(schoolId) {
-    if (!confirm('Are you sure you want to delete this QR code?')) return;
+    // Find the QR card to get the name
+    const qrCard = document.querySelector(`[data-school-id="${schoolId}"]`);
+    const qrName = qrCard ? qrCard.querySelector('.qr-code-name')?.textContent || schoolId : schoolId;
+    
+    showDeleteModal(
+        qrName,
+        async () => {
+            try {
+                const response = await fetch(`{{ url_for("qr_mgmt.delete_qr", school_id="") }}`.replace('', schoolId), {
+                    method: 'POST'
+                });
 
-    try {
-        const response = await fetch(`{{ url_for("qr_mgmt.delete_qr", school_id="") }}`.replace('', schoolId), {
-            method: 'POST'
-        });
+                const data = await response.json();
 
-        const data = await response.json();
-
-        if (data.success) {
-            alert('QR code deleted successfully');
-            loadQRCodes();
-        } else {
-            alert('Error: ' + data.error);
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
+                if (data.success) {
+                    // Show success message
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success';
+                    alertDiv.textContent = 'QR code deleted successfully';
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                    
+                    // Reload QR codes
+                    setTimeout(loadQRCodes, 500);
+                } else {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger';
+                    alertDiv.textContent = 'Error: ' + data.error;
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                }
+            } catch (error) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger';
+                alertDiv.textContent = 'Error: ' + error.message;
+                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+            }
+        },
+        `ID: ${schoolId}`
+    );
 }
 
 // Refresh button

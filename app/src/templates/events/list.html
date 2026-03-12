@@ -389,13 +389,23 @@ function toggleEventMenu(element) {
 
 function deleteEvent(event, eventId, deleteUrl) {
     event.preventDefault();
-    if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = deleteUrl;
-        document.body.appendChild(form);
-        form.submit();
-    }
+    
+    // Get event name from the card
+    const eventCard = event.target.closest('.event-card');
+    const eventName = eventCard ? eventCard.querySelector('.event-title').textContent : 'this event';
+    const eventDate = eventCard ? eventCard.querySelector('.date-text').textContent : '';
+    
+    showDeleteModal(
+        eventName,
+        () => {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = deleteUrl;
+            document.body.appendChild(form);
+            form.submit();
+        },
+        eventDate ? `Date: ${eventDate}` : null
+    );
 }
 </script>
 {% endblock %}

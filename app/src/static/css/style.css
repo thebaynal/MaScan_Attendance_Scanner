@@ -5,6 +5,8 @@
     box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
     /* Light Mode Colors */
     --primary-color: #2A73FF;
@@ -181,6 +183,7 @@ body {
 .navbar-brand a {
     text-decoration: none;
     font-weight: 700;
+    font-family: 'Poppins', sans-serif;
     font-size: 1.4em;
     color: var(--primary-color);
     transition: all 0.3s ease;
@@ -198,6 +201,8 @@ body {
 
 .logo-text {
     font-size: 1em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -548,6 +553,186 @@ html.dark-mode .card:hover {
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
+}
+
+/* Modal Dialog */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    width: 90%;
+    animation: slideInUp 0.3s ease-out;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.modal-backdrop.active .modal-content {
+    transform: scale(1);
+}
+
+html.dark-mode .modal-content {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.modal-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.modal-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(220, 53, 69, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+html.dark-mode .modal-icon {
+    background: rgba(220, 53, 69, 0.25);
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+.modal-body {
+    padding: 24px;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.modal-body p {
+    margin: 0 0 12px 0;
+    font-size: 0.95em;
+}
+
+.modal-body p:last-child {
+    margin-bottom: 0;
+}
+
+.modal-item-info {
+    background: var(--input-bg);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+    border-left: 3px solid var(--danger-color);
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.modal-btn-cancel {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+}
+
+.modal-btn-cancel:hover {
+    background: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.modal-btn-delete {
+    background: var(--danger-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.modal-btn-delete:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.5);
+}
+
+.modal-btn-delete:active {
+    transform: translateY(0px);
+}
+
+/* Modal Responsive */
+@media (max-width: 480px) {
+    .modal-content {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    .modal-header {
+        padding: 20px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        padding: 16px 20px;
+        flex-direction: column-reverse;
+    }
+
+    .modal-btn {
+        width: 100%;
+    }
+
+    .modal-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .modal-title {
+        font-size: 1.1em;
+    }
 }
 
 /* Responsive */

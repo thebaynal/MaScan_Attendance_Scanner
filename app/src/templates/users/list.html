@@ -32,7 +32,7 @@
             <td>
                 <a href="{{ url_for('user.edit_user', target_username=user[0]) }}" class="btn btn-small btn-secondary">Edit</a>
                 {% if user[0] != session.get('username') %}
-                <form method="POST" action="{{ url_for('user.delete_user', target_username=user[0]) }}" style="display: inline;" onclick="return confirm('Are you sure?');">
+                <form method="POST" action="{{ url_for('user.delete_user', target_username=user[0]) }}" style="display: inline;" class="delete-user-form" data-username="{{ user[0] }}" data-fullname="{{ user[1] }}">
                     <button type="submit" class="btn btn-small btn-danger">Delete</button>
                 </form>
                 {% endif %}
@@ -121,4 +121,28 @@
     background: #c82333;
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Handle delete user form submission
+    document.querySelectorAll('.delete-user-form').forEach(form => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = form.getAttribute('data-username');
+            const fullname = form.getAttribute('data-fullname');
+            
+            showDeleteModal(
+                username,
+                () => {
+                    // Submit the form after modal confirmation
+                    form.submit();
+                },
+                `Full Name: ${fullname}`
+            );
+        });
+    });
+});
+</script>
+
 {% endblock %}

@@ -55,6 +55,26 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
     {% block extra_js %}{% endblock %}
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">⚠️</div>
+                <h2 class="modal-title">Delete Confirmation</h2>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Are you sure you want to delete this item?</p>
+                <div id="modalItemInfo" class="modal-item-info" style="display: none;"></div>
+                <p style="color: var(--text-color); font-size: 0.9em; margin-top: 16px;">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="modal-btn modal-btn-delete" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
