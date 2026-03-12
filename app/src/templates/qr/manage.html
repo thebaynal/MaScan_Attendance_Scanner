@@ -43,10 +43,20 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
         <form id="csv-upload-form" class="upload-form">
             <div class="file-input-wrapper">
                 <input type="file" id="csv-file" name="file" accept=".csv" required>
-                <label for="csv-file" class="file-label">
+                <label for="csv-file" class="file-label" id="file-label">
                     <span class="file-icon">📁</span>
                     <span>Click to select CSV file or drag here</span>
                 </label>
+                <div id="file-selected-info" class="file-selected-info" style="display: none;">
+                    <div class="selected-file-details">
+                        <span class="file-check-icon">✓</span>
+                        <div class="file-info">
+                            <div class="file-name" id="selected-file-name"></div>
+                            <div class="file-size" id="selected-file-size"></div>
+                        </div>
+                        <button type="button" class="clear-file-btn" id="clear-file-btn" title="Clear selection">✕</button>
+                    </div>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary upload-btn">
                 <span class="btn-icon">⚡</span>
@@ -234,6 +244,63 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
     display: block;
     color: var(--text-color);
     font-weight: 500;
+}
+
+.file-selected-info {
+    margin-top: 10px;
+    padding: 12px 15px;
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    border-radius: 6px;
+    animation: slideInUp 0.2s ease-out;
+}
+
+.selected-file-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-check-icon {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.2em;
+    flex-shrink: 0;
+}
+
+.file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-name {
+    font-weight: 600;
+    color: #28a745;
+    word-break: break-word;
+    font-size: 0.95em;
+}
+
+.file-size {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.clear-file-btn {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.clear-file-btn:hover {
+    background: rgba(220, 53, 69, 0.2);
+    border-color: rgba(220, 53, 69, 0.5);
 }
 
 .upload-btn {
@@ -524,6 +591,50 @@ html.dark-mode .qr-code-card:hover {
 const csvForm = document.getElementById('csv-upload-form');
 const csvFileInput = document.getElementById('csv-file');
 const fileLabel = document.querySelector('.file-label');
+const fileSelectedInfo = document.getElementById('file-selected-info');
+const selectedFileName = document.getElementById('selected-file-name');
+const selectedFileSize = document.getElementById('selected-file-size');
+const clearFileBtn = document.getElementById('clear-file-btn');
+
+// Function to format file size
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Function to update file display
+function updateFileDisplay(file) {
+    selectedFileName.textContent = file.name;
+    selectedFileSize.textContent = formatFileSize(file.size);
+    fileSelectedInfo.style.display = 'block';
+    fileLabel.style.opacity = '0.6';
+}
+
+// Function to clear file
+function clearFileSelection() {
+    csvFileInput.value = '';
+    fileSelectedInfo.style.display = 'none';
+    fileLabel.style.opacity = '1';
+}
+
+// File input change event
+csvFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        updateFileDisplay(file);
+    } else {
+        clearFileSelection();
+    }
+});
+
+// Clear file button
+clearFileBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    clearFileSelection();
+});
 
 // Drag and drop
 fileLabel.addEventListener('dragover', (e) => {
@@ -532,7 +643,9 @@ fileLabel.addEventListener('dragover', (e) => {
 });
 
 fileLabel.addEventListener('dragleave', () => {
-    fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
+    if (csvFileInput.files.length === 0) {
+        fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
+    }
 });
 
 fileLabel.addEventListener('drop', (e) => {
@@ -540,7 +653,9 @@ fileLabel.addEventListener('drop', (e) => {
     fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
     
     if (e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
         csvFileInput.files = e.dataTransfer.files;
+        updateFileDisplay(file);
     }
 });
 
@@ -593,7 +708,7 @@ csvForm.addEventListener('submit', async (e) => {
                 errorList.style.display = 'none';
             }
 
-            csvFileInput.value = '';
+            clearFileSelection();
             
             // Refresh QR codes
             setTimeout(() => loadQRCodes(), 1000);
