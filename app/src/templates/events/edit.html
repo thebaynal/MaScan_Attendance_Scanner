@@ -3,91 +3,394 @@
 {% block title %}Edit Event - MaScan{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <div class="form-header">
-        <h1>Edit Event</h1>
+<div class="event-form-wrapper">
+    <div class="form-card">
+        <div class="form-header">
+            <div class="header-icon">✏️</div>
+            <h1>Edit Event</h1>
+            <p>Update event details and information</p>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible">
+            <span>{{ error }}</span>
+            <button type="button" class="close-alert">&times;</button>
+        </div>
+        {% endif %}
+
+        <form method="POST" class="event-form" id="editEventForm">
+            <div class="form-group">
+                <label for="name">
+                    <span class="label-text">Event Name</span>
+                    <span class="required">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📝</span>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        value="{{ event[1] }}" 
+                        required
+                        class="form-input"
+                        onchange="validateEventName(this)"
+                    >
+                </div>
+                <small class="field-help">Event name that appears in listings</small>
+            </div>
+
+            <div class="form-group">
+                <label for="date">
+                    <span class="label-text">Event Date</span>
+                    <span class="required">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📆</span>
+                    <input 
+                        type="date" 
+                        id="date" 
+                        name="date" 
+                        value="{{ event[2] }}" 
+                        required
+                        class="form-input"
+                        onchange="validateEventDate(this)"
+                    >
+                </div>
+                <small class="field-help">The date when this event takes place</small>
+            </div>
+
+            <div class="form-group">
+                <label for="description">
+                    <span class="label-text">Description</span>
+                    <span class="optional">(optional)</span>
+                </label>
+                <div class="input-wrapper textarea-wrapper">
+                    <span class="input-icon textarea-icon">📄</span>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        rows="5"
+                        class="form-input"
+                        maxlength="500"
+                    >{{ event[3] if event[3] else '' }}</textarea>
+                    <span class="char-count"><span id="charCount">{{ (event[3] if event[3] else '')|length }}</span>/500</span>
+                </div>
+                <small class="field-help">Additional details about the event</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <span class="icon">💾</span> Save Changes
+                </button>
+                <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="btn btn-secondary btn-lg">
+                    <span class="icon">←</span> Cancel
+                </a>
+            </div>
+
+            <div class="form-footer">
+                <p>Updating an event will not affect existing attendance records.</p>
+            </div>
+        </form>
     </div>
-
-    {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-
-    <form method="POST" class="form">
-        <div class="form-group">
-            <label for="name">Event Name *</label>
-            <input type="text" id="name" name="name" value="{{ event[1] }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="date">Event Date *</label>
-            <input type="date" id="date" name="date" value="{{ event[2] }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4">{{ event[3] if event[3] else '' }}</textarea>
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
 </div>
 
 <style>
-.form-container {
-    max-width: 600px;
-    margin: 0 auto;
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
+.event-form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 100px);
+    padding: 40px 20px;
+    animation: fadeIn 0.4s ease-in;
+}
+
+.form-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 550px;
+    padding: 40px;
+    animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .form-header {
-    margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    display: block;
+    animation: bounce 0.6s ease-out;
 }
 
 .form-header h1 {
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.form-group {
-    margin-bottom: 20px;
+.form-header p {
+    margin: 0;
+    color: var(--navbar-text);
+    font-size: 0.95rem;
+}
+
+.alert {
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+    border-left-color: var(--danger-color);
+}
+
+.close-alert {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0;
+}
+
+.event-form {
     display: flex;
     flex-direction: column;
 }
 
+.form-group {
+    margin-bottom: 28px;
+}
+
 .form-group label {
-    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
     font-weight: 600;
-    color: #333;
+    color: var(--text-color);
 }
 
-.form-group input,
-.form-group textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1em;
+.label-text {
+    font-size: 0.95rem;
+}
+
+.required {
+    color: var(--danger-color);
+}
+
+.optional {
+    font-weight: 400;
+    color: var(--navbar-text);
+    font-size: 0.85rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.textarea-icon {
+    top: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 12px 12px 44px;
+    border: 1.5px solid var(--input-border);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
     font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-input:focus {
     outline: none;
-    border-color: #2A73FF;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
+    background: var(--input-bg);
+}
+
+.form-input::placeholder {
+    color: rgba(128, 128, 128, 0.5);
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 120px;
+    padding-bottom: 40px;
+}
+
+.textarea-wrapper {
+    flex-direction: column;
+}
+
+.char-count {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 0.8rem;
+    color: var(--navbar-text);
+}
+
+.field-help {
+    display: block;
+    margin-top: 6px;
+    color: var(--navbar-text);
+    font-size: 0.8rem;
+    font-weight: 400;
 }
 
 .form-actions {
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 40px;
 }
 
-.form-actions .btn {
+.btn {
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-lg {
+    padding: 14px 24px;
+    font-size: 1rem;
     flex: 1;
 }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(42, 115, 255, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+    color: var(--navbar-text);
+    font-size: 0.85rem;
+}
+
+.form-footer p {
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-card {
+        padding: 24px;
+    }
+
+    .form-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-lg {
+        font-size: 0.9rem;
+        padding: 12px 16px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+/* JavaScript Functions */
+function validateEventName(input) {
+    if (input.value.trim().length === 0) {
+        input.classList.add('error');
+    } else {
+        input.classList.remove('error');
+    }
+}
+
+function validateEventDate(input) {
+    const selectedDate = new Date(input.value);
+    if (selectedDate < new Date()) {
+        input.classList.add('error');
+    } else {
+        input.classList.remove('error');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const descriptionInput = document.getElementById('description');
+    const charCount = document.getElementById('charCount');
+    
+    if (descriptionInput && charCount) {
+        descriptionInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
+
+    // Close alert button
+    const closeAlerts = document.querySelectorAll('.close-alert');
+    closeAlerts.forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.parentElement.style.animation = 'slideInDown 0.3s ease-out reverse';
+            setTimeout(() => {
+                this.parentElement.remove();
+            }, 300);
+        });
+    });
+});
+</style>
 </style>
 {% endblock %}
