@@ -35,9 +35,47 @@ function updateThemeIcon() {
     }, 400);
 }
 
+// Hamburger Menu Management
+function initHamburgerMenu() {
+    const hamburger = document.getElementById('hamburgerMenu');
+    const navbarMenu = document.getElementById('navbarMenu');
+    const navbarRight = document.getElementById('navbarRight');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    if (!hamburger) return;
+
+    // Toggle menu on hamburger click
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navbarMenu.classList.toggle('active');
+        navbarRight.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a nav link
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navbarMenu.classList.remove('active');
+            navbarRight.classList.remove('active');
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.navbar-container')) {
+            hamburger.classList.remove('active');
+            navbarMenu.classList.remove('active');
+            navbarRight.classList.remove('active');
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize theme
     initTheme();
+    
+    // Initialize hamburger menu
+    initHamburgerMenu();
     
     // Auto-hide alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert');

@@ -35,6 +35,7 @@ def create_app():
     from routes.attendance_routes import attendance_bp
     from routes.user_routes import user_bp
     from routes.api_routes import api_bp
+    from routes.qr_management_routes import qr_mgmt_bp
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -42,6 +43,7 @@ def create_app():
     app.register_blueprint(attendance_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(qr_mgmt_bp)
     
     return app
 

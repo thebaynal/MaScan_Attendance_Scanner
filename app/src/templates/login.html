@@ -6,7 +6,9 @@
 <div class="login-container">
     <div class="login-card">
         <div class="login-header">
-            <div class="logo-circle">🎯</div>
+            <div class="logo-circle">
+                <img src="{{ url_for('static', filename='images/MS_Logo_Blue.ico') }}" alt="Logo">
+            </div>
             <h1>MaScan</h1>
             <p>QR Code Attendance System</p>
         </div>
@@ -131,10 +133,18 @@ html, body {
 }
 
 .logo-circle {
-    font-size: 3.5em;
+    width: 100px;
+    height: 100px;
     margin-bottom: 15px;
     animation: pulse 2s infinite;
     display: inline-block;
+}
+
+.logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .login-header h1 {
@@ -275,7 +285,8 @@ html, body {
     }
 
     .logo-circle {
-        font-size: 2.8em;
+        width: 80px;
+        height: 80px;
     }
 
     .form-group input {

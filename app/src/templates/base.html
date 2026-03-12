@@ -13,19 +13,25 @@
         <div class="navbar-container">
             <div class="navbar-brand">
                 <a href="{{ url_for('dashboard.home') }}">
-                    <span class="logo-text">🎯 MaScan</span>
+                    <span class="logo-text"><img src="{{ url_for('static', filename='images/MS_Logo_Blue.ico') }}" alt="Logo"> MaScan</span>
                 </a>
             </div>
-            <div class="navbar-menu">
+            <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="navbar-menu" id="navbarMenu">
                 <a href="{{ url_for('dashboard.home') }}" class="nav-link">Dashboard</a>
                 <a href="{{ url_for('event.list_events') }}" class="nav-link">Events</a>
                 <a href="{{ url_for('attendance.scanner') }}" class="nav-link">Scanner</a>
                 {% if session.get('username') == 'admin' or user_role == 'admin' %}
+                <a href="{{ url_for('qr_mgmt.manage_qr') }}" class="nav-link">QR Management</a>
                 <a href="{{ url_for('user.list_users') }}" class="nav-link">Users</a>
                 {% endif %}
                 <a href="{{ url_for('dashboard.activity_log') }}" class="nav-link">Activity Log</a>
             </div>
-            <div class="navbar-right">
+            <div class="navbar-right" id="navbarRight">
                 <span class="user-info">{{ session.get('username') }} ({{ user_role }})</span>
                 <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
                 <form method="post" action="{{ url_for('auth.logout') }}" style="display: inline;">

@@ -9,6 +9,8 @@ A modern Flask-based web application for managing employee attendance using QR c
 ## ✨ Features
 
 - **QR Code Scanning**: Quick and easy employee check-in via QR code
+- **QR Code Generation**: Import CSV files and automatically generate QR codes for bulk student/employee data
+- **CSV Import**: Upload CSV files to populate student/employee database with automatic QR code generation
 - **Employee Management**: Create, update, and manage employee records
 - **Event Management**: Create and manage attendance events
 - **Authentication**: Secure login system with role-based access
@@ -183,21 +185,31 @@ Key configuration can be found in `src/config/constants.py`:
    - View attendance summary and overview
    - Access main features from navigation menu
 
-### 3. **Create Event**
+### 3. **Import CSV & Generate QR Codes** (NEW!)
+   - Go to Dashboard → QR Management (or use navbar)
+   - Upload a CSV file with student/employee data
+   - Required columns: School ID, Name
+   - Optional columns: First Name, Last Name, Year, Section, Course
+   - System automatically generates QR codes for all records
+   - View, download, and manage generated QR codes
+   - Download all QR codes as ZIP or individual codes
+   - See [QR Code Management Guide](QR_CODE_MANAGEMENT.md) for detailed instructions
+
+### 4. **Create Event**
    - Go to Events → Create Event
    - Set event name, date, and time
    - Generate QR codes for the event
 
-### 4. **Scan Attendance**
+### 5. **Scan Attendance**
    - Go to Scanner
    - Use webcam to scan employee QR codes
    - Real-time attendance recording
 
-### 5. **Manage Users/Employees**
+### 6. **Manage Users/Employees**
    - Users → List/Create for employee management
    - Edit or delete employee records
 
-### 6. **View Reports**
+### 7. **View Reports**
    - Attendance History → Export as PDF
    - Generate attendance reports by event
 
@@ -208,7 +220,8 @@ Key configuration can be found in `src/config/constants.py`:
 | Feature | Route | Description |
 |---------|-------|-------------|
 | Dashboard | `/dashboard` | Main dashboard view |
-| Scanner | `/scanner` | QR code scanner |
+| Scanner | `/scan` | QR code scanner |
+| QR Management | `/qr-management` | CSV import & QR code generation |
 | Events | `/events` | Event management |
 | Users | `/users` | User management |
 | API | `/api/*` | RESTful API endpoints |
