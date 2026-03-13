@@ -85,7 +85,7 @@ Starting server...
 
 ### Default Credentials
 - **Username:** `admin`
-- **Password:** `admin123`
+- **Password:** `Admin@123`
 
 ---
 

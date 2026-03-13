@@ -148,23 +148,27 @@ def export_event(event_id):
     if not event:
         return redirect(url_for('event.list_events'))
     
-    # Get attendance for this event
-    attendance = db._execute(
-        "SELECT * FROM attendance WHERE event_id = ? ORDER BY user_name",
-        (event_id,),
-        fetch_all=True
-    ) or []
-    
-    # Generate PDF using the pdf_export utility
-    from utils.pdf_export import generate_attendance_pdf
+    from utils.pdf_export import AttendancePDFExporter
     from flask import send_file
     import io
     
-    pdf_bytes = generate_attendance_pdf(event, attendance)
-    
-    return send_file(
-        io.BytesIO(pdf_bytes),
-        mimetype='application/pdf',
-        as_attachment=True,
-        download_name=f"attendance_{event_id}.pdf"
-    )
+    try:
+        exporter = AttendancePDFExporter(db)
+        buffer = io.BytesIO()
+        exporter.export_attendance(event_id, buffer)
+        buffer.seek(0)
+        
+        # Clean event name for filename
+        safe_name = "".join(c for c in event[1] if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        if not safe_name:
+            safe_name = "event"
+            
+        return send_file(
+            buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"attendance_{safe_name}.pdf"
+        )
+    except Exception as e:
+        print(f"Error generating PDF: {e}")
+        return redirect(url_for('event.view_event', event_id=event_id))

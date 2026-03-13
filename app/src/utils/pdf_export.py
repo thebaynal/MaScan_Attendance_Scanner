@@ -77,7 +77,7 @@ class AttendancePDFExporter:
             # Create PDF document
             doc = SimpleDocTemplate(
                 filename,
-                pagesize=landscape(letter),
+                pagesize=letter,
                 rightMargin=0.5*inch,
                 leftMargin=0.5*inch,
                 topMargin=0.75*inch,
@@ -124,7 +124,7 @@ class AttendancePDFExporter:
                     
                     # Create table data
                     table_data = [
-                        ['#', 'Student ID', 'Name', 'Morning Time', 'Morning Status', 'Afternoon Time', 'Afternoon Status']
+                        ['#', 'Student ID', 'Name', 'AM Time', 'AM Status', 'PM Time', 'PM Status']
                     ]
                     
                     for idx, student in enumerate(students, 1):
@@ -139,7 +139,7 @@ class AttendancePDFExporter:
                         ])
                     
                     # Create table
-                    col_widths = [0.4*inch, 1.2*inch, 2.5*inch, 1*inch, 1*inch, 1*inch, 1*inch]
+                    col_widths = [0.3*inch, 1.0*inch, 2.2*inch, 1.0*inch, 1.0*inch, 1.0*inch, 1.0*inch]
                     table = Table(table_data, colWidths=col_widths, repeatRows=1)
                     
                     # Style the table
