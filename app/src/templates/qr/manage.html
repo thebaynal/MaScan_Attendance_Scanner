@@ -13,49 +13,61 @@
     <div class="card qr-single-card">
         <h2>✨ Generate Single QR Code</h2>
         <p class="info-text">Create a QR code for a single student instantly</p>
-        
+
         <form id="single-qr-form" class="single-qr-form">
             <div class="form-row">
                 <div class="form-group required">
                     <label for="single-school-id">School ID</label>
-                    <input type="text" id="single-school-id" name="school_id" class="form-control" placeholder="e.g., STU001" required>
+                    <input type="text" id="single-school-id" name="school_id" class="form-control"
+                        placeholder="e.g., STU001" required>
                 </div>
                 <div class="form-group required">
                     <label for="single-name">Full Name</label>
-                    <input type="text" id="single-name" name="name" class="form-control" placeholder="e.g., John C. Doe" required>
+                    <input type="text" id="single-name" name="name" class="form-control"
+                        placeholder="e.g., Jesus OF Nazareth" required>
                 </div>
             </div>
-            
-            <details class="optional-fields-details">
-                <summary>➕ Additional Information (Optional)</summary>
-                <div class="optional-fields-grid">
-                    <div class="form-group">
-                        <label for="single-first-name">First Name</label>
-                        <input type="text" id="single-first-name" name="first_name" class="form-control" placeholder="John">
-                    </div>
-                    <div class="form-group">
-                        <label for="single-last-name">Last Name</label>
-                        <input type="text" id="single-last-name" name="last_name" class="form-control" placeholder="Doe">
-                    </div>
-                    <div class="form-group">
-                        <label for="single-middle-initial">Middle Initial</label>
-                        <input type="text" id="single-middle-initial" name="middle_initial" class="form-control" placeholder="C">
-                    </div>
-                    <div class="form-group">
-                        <label for="single-course">Course</label>
-                        <input type="text" id="single-course" name="course" class="form-control" placeholder="e.g., BSCS">
-                    </div>
-                    <div class="form-group">
-                        <label for="single-year">Year Level</label>
-                        <input type="text" id="single-year" name="year_level" class="form-control" placeholder="e.g., 1">
-                    </div>
-                    <div class="form-group">
-                        <label for="single-section">Section</label>
-                        <input type="text" id="single-section" name="section" class="form-control" placeholder="e.g., A">
-                    </div>
+
+            <div class="form-row">
+                <div class="form-group required">
+                    <label for="single-first-name">First Name</label>
+                    <input type="text" id="single-first-name" name="first_name" class="form-control" placeholder="Jesus"
+                        required>
                 </div>
-            </details>
-            
+                <div class="form-group">
+                    <label for="single-middle-initial">Middle Initial <span
+                            style="font-weight:normal; font-size:0.85em; color:var(--navbar-text)">(Optional)</span></label>
+                    <input type="text" id="single-middle-initial" name="middle_initial" class="form-control"
+                        placeholder="OF">
+                </div>
+                <div class="form-group required">
+                    <label for="single-last-name">Last Name</label>
+                    <input type="text" id="single-last-name" name="last_name" class="form-control"
+                        placeholder="Nazareth" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group required">
+                    <label for="single-course">Course</label>
+                    <input type="text" id="single-course" name="course" class="form-control" placeholder="e.g., BSCS"
+                        required>
+                </div>
+                <div class="form-group required">
+                    <label for="single-year">Year Level</label>
+                    <input type="text" id="single-year" name="year_level" class="form-control" placeholder="e.g., 1"
+                        required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group required">
+                    <label for="single-section">Section</label>
+                    <input type="text" id="single-section" name="section" class="form-control" placeholder="e.g., A"
+                        required>
+                </div>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary generate-btn">
                     <span class="btn-icon">⚡</span>
@@ -63,7 +75,7 @@
                 </button>
             </div>
         </form>
-        
+
         <div id="single-qr-result" class="upload-result" style="display: none;">
             <div id="single-result-message" class="result-message"></div>
         </div>
@@ -73,7 +85,7 @@
     <div class="card qr-upload-card">
         <h2>📤 Import CSV File</h2>
         <p class="info-text">Upload a CSV file containing student information to generate QR codes</p>
-        
+
         <div class="csv-template-info">
             <details>
                 <summary>📋 CSV Format Requirements</summary>
@@ -114,7 +126,8 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
                             <div class="file-name" id="selected-file-name"></div>
                             <div class="file-size" id="selected-file-size"></div>
                         </div>
-                        <button type="button" class="clear-file-btn" id="clear-file-btn" title="Clear selection">✕</button>
+                        <button type="button" class="clear-file-btn" id="clear-file-btn"
+                            title="Clear selection">✕</button>
                     </div>
                 </div>
             </div>
@@ -148,7 +161,8 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
                 <button id="refresh-btn" class="btn btn-secondary btn-small">🔄 Refresh</button>
                 <button id="download-all-btn" class="btn btn-success btn-small">⬇️ Download All</button>
                 <button id="export-csv-btn" class="btn btn-secondary btn-small">📥 Export CSV</button>
-                <button id="delete-selected-btn" class="btn btn-danger btn-small" style="display: none;">🗑️ Delete Selected</button>
+                <button id="delete-selected-btn" class="btn btn-danger btn-small" style="display: none;">🗑️ Delete
+                    Selected</button>
             </div>
         </div>
 
@@ -214,1222 +228,1224 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
 </div>
 
 <style>
-.qr-management-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.qr-header {
-    text-align: center;
-    margin-bottom: 40px;
-    animation: slideInUp 0.5s ease-out;
-}
-
-.qr-header h1 {
-    font-size: 2.5em;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.qr-header p {
-    color: var(--navbar-text);
-    font-size: 1.1em;
-}
-
-/* Upload and Single Cards */
-.qr-upload-card, .qr-single-card {
-    margin-bottom: 30px;
-    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(42, 115, 255, 0.02) 100%);
-    border: 1px solid rgba(42, 115, 255, 0.1);
-}
-
-.qr-upload-card h2, .qr-single-card h2 {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--primary-color);
-    font-size: 1.35em;
-}
-
-.info-text {
-    color: var(--navbar-text);
-    margin-bottom: 25px;
-    font-size: 0.95em;
-    line-height: 1.5;
-}
-
-.csv-template-info {
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 25px;
-    overflow: hidden;
-}
-
-.csv-template-info details {
-    padding: 15px;
-    cursor: pointer;
-}
-
-.csv-template-info summary {
-    font-weight: 600;
-    color: var(--primary-color);
-    transition: all 0.3s ease;
-    outline: none;
-    padding: 5px;
-    border-radius: 4px;
-}
-
-.csv-template-info summary:hover {
-    color: #1e52cc;
-    background: rgba(42, 115, 255, 0.05);
-}
-
-.csv-template-info details[open] summary {
-    margin-bottom: 5px;
-}
-
-.format-details {
-    padding: 0 15px 15px 15px;
-    border-top: 1px solid var(--border-color);
-    margin-top: 0;
-    animation: slideInDown 0.3s ease-out;
-}
-
-.format-details p {
-    margin-bottom: 10px;
-    font-size: 0.95em;
-}
-
-.format-details ul {
-    list-style-position: inside;
-    margin-bottom: 15px;
-    line-height: 1.8;
-    padding-left: 5px;
-}
-
-.format-details code {
-    background: var(--card-bg);
-    padding: 3px 7px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    color: var(--primary-color);
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-.format-details pre {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 12px;
-    overflow-x: auto;
-    font-size: 0.85em;
-    line-height: 1.5;
-    margin-top: 10px;
-}
-
-/* Single Form Styles */
-.single-qr-form {
-    margin-top: 20px;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: var(--text-color);
-}
-
-.form-group.required label::after {
-    content: " *";
-    color: #dc3545;
-}
-
-.form-control {
-    padding: 10px 12px;
-    border: 1px solid var(--input-border);
-    border-radius: 6px;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    font-family: inherit;
-    font-size: 0.95em;
-    transition: all 0.2s ease;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.15);
-}
-
-.optional-fields-details {
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 25px;
-    overflow: hidden;
-}
-
-.optional-fields-details summary {
-    font-weight: 600;
-    color: var(--navbar-text);
-    transition: all 0.3s ease;
-    outline: none;
-    padding: 12px 15px;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.02);
-}
-
-.optional-fields-details summary:hover {
-    color: var(--primary-color);
-    background: rgba(42, 115, 255, 0.05);
-}
-
-html.dark-mode .optional-fields-details summary {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-html.dark-mode .optional-fields-details summary:hover {
-    background: rgba(42, 115, 255, 0.15);
-}
-
-.optional-fields-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    padding: 15px;
-    border-top: 1px solid var(--border-color);
-    animation: slideInDown 0.3s ease-out;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-.generate-btn {
-    padding: 12px 25px;
-    font-size: 1.05em;
-}
-
-/* File Input */
-.upload-form {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-    align-items: stretch;
-}
-
-.file-input-wrapper {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    grid-column: 1 / -1;
-}
-
-#csv-file {
-    display: none;
-}
-
-.file-label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 25px;
-    border: 2.5px dashed var(--primary-color);
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, rgba(42, 115, 255, 0.05), rgba(42, 115, 255, 0.01));
-    min-height: 150px;
-}
-
-.file-label:hover {
-    background: linear-gradient(135deg, rgba(42, 115, 255, 0.15), rgba(42, 115, 255, 0.08));
-    border-color: #1e52cc;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(42, 115, 255, 0.15);
-}
-
-.file-icon {
-    font-size: 2.5em;
-    display: block;
-    margin-bottom: 12px;
-    transition: all 0.3s ease;
-}
-
-.file-label:hover .file-icon {
-    transform: scale(1.15) rotate(5deg);
-}
-
-.file-label span:last-child {
-    display: block;
-    color: var(--text-color);
-    font-weight: 500;
-    font-size: 0.95em;
-    line-height: 1.4;
-}
-
-.file-selected-info {
-    margin-top: 12px;
-    padding: 14px 16px;
-    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
-    border: 1.5px solid rgba(40, 167, 69, 0.35);
-    border-radius: 8px;
-    animation: slideInUp 0.3s ease-out;
-    grid-column: 1 / -1;
-}
-
-.selected-file-details {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.file-check-icon {
-    color: #28a745;
-    font-weight: bold;
-    font-size: 1.3em;
-    flex-shrink: 0;
-}
-
-.file-info {
-    flex: 1;
-    min-width: 150px;
-    text-align: left;
-}
-
-.file-name {
-    font-weight: 700;
-    color: var(--text-color);
-    word-break: break-word;
-    font-size: 0.95em;
-    margin-bottom: 3px;
-}
-
-.file-size {
-    font-size: 0.82em;
-    color: var(--navbar-text);
-    margin-top: 3px;
-}
-
-.clear-file-btn {
-    background: rgba(220, 53, 69, 0.12);
-    border: 1.5px solid rgba(220, 53, 69, 0.35);
-    color: #dc3545;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    font-size: 0.95em;
-}
-
-.clear-file-btn:hover {
-    background: rgba(220, 53, 69, 0.2);
-    border-color: rgba(220, 53, 69, 0.5);
-    transform: scale(1.05);
-}
-
-.upload-btn {
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 22px;
-    font-size: 0.95em;
-    height: fit-content;
-}
-
-.btn-icon {
-    font-size: 1.15em;
-}
-
-/* Progress */
-.progress-container {
-    margin-top: 20px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: var(--input-border);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: var(--primary-color);
-    border-radius: 4px;
-    animation: shimmer 2s infinite;
-}
-
-#progress-text {
-    color: var(--primary-color);
-    font-weight: 500;
-}
-
-/* Results */
-.upload-result {
-    margin-top: 20px;
-}
-
-.result-message {
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    animation: slideInUp 0.3s ease-out;
-}
-
-.result-message.success {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-    border: 1px solid rgba(40, 167, 69, 0.3);
-}
-
-.result-message.error {
-    background: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-    border: 1px solid rgba(220, 53, 69, 0.3);
-}
-
-.error-list {
-    background: rgba(220, 53, 69, 0.08);
-    border: 1px solid rgba(220, 53, 69, 0.2);
-    border-radius: 6px;
-    padding: 15px;
-}
-
-.error-list h3 {
-    color: #dc3545;
-    margin-bottom: 10px;
-}
-
-.error-list ul {
-    list-style-position: inside;
-    color: #dc3545;
-}
-
-.error-list li {
-    margin-bottom: 5px;
-    font-size: 0.95em;
-}
-
-/* Display Card */
-.qr-display-card {
-    margin-top: 30px;
-}
-
-.qr-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.qr-card-header h2 {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.qr-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.qr-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-/* Filter Section */
-.qr-filter-section {
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 25px;
-}
-
-.filter-controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    align-items: end;
-}
-
-.search-box {
-    grid-column: 1 / -1;
-}
-
-.filter-input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--card-bg);
-    color: var(--text-color);
-    font-size: 0.95em;
-    transition: all 0.2s ease;
-}
-
-.filter-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
-}
-
-.filter-controls label {
-    display: block;
-    font-size: 0.85em;
-    font-weight: 600;
-    color: var(--navbar-text);
-    margin-bottom: 6px;
-}
-
-.clear-filters-btn {
-    width: 100%;
-}
-
-/* Bulk Actions Toolbar */
-.bulk-actions-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: rgba(42, 115, 255, 0.08);
-    border: 1px solid rgba(42, 115, 255, 0.2);
-    border-radius: 6px;
-    margin-bottom: 15px;
-    animation: slideInUp 0.3s ease-out;
-}
-
-.bulk-select-all {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.select-checkbox {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: var(--primary-color);
-}
-
-.selection-info {
-    font-size: 0.9em;
-    color: var(--navbar-text);
-    font-weight: 500;
-}
-
-.stat-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    animation: fadeIn 0.5s ease-out;
-}
-
-.stat-label {
-    color: var(--navbar-text);
-    font-weight: 500;
-}
-
-.stat-value {
-    font-size: 2em;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-/* QR Codes Grid */
-.qr-codes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    min-height: 300px;
-}
-
-.empty-state {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 60px 20px;
-    text-align: center;
-    color: var(--navbar-text);
-}
-
-.empty-state p {
-    margin: 5px 0;
-}
-
-.empty-state p:first-child {
-    font-size: 1.2em;
-    font-weight: 600;
-}
-
-/* QR Code Card */
-.qr-code-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 15px;
-    animation: slideInUp 0.4s ease-out;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.qr-code-card.selected {
-    border-color: var(--primary-color);
-    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(42, 115, 255, 0.08) 100%);
-    box-shadow: 0 0 0 2px rgba(42, 115, 255, 0.1);
-}
-
-.qr-code-checkbox {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: var(--primary-color);
-    z-index: 5;
-}
-
-.qr-code-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
-html.dark-mode .qr-code-card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-}
-
-.qr-code-content {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.qr-code-img {
-    width: 100%;
-    max-width: 180px;
-    height: auto;
-}
-
-.qr-code-info {
-    margin-bottom: 15px;
-}
-
-.qr-code-id {
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 5px;
-    word-break: break-word;
-}
-
-.qr-code-name {
-    font-size: 0.95em;
-    color: var(--text-color);
-    word-break: break-word;
-}
-
-.qr-code-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: auto;
-}
-
-.qr-code-actions button {
-    flex: 1;
-    padding: 8px 12px;
-    font-size: 0.85em;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .qr-header h1 {
-        font-size: 1.8em;
-    }
-
-    .upload-form {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .upload-btn {
-        grid-column: 1 / -1;
-        width: 100%;
-    }
-
-    .file-label {
-        padding: 35px 20px;
-        min-height: 130px;
-    }
-
-    .file-icon {
-        font-size: 2.2em;
-        margin-bottom: 10px;
-    }
-
-    .file-label span:last-child {
-        font-size: 0.9em;
-    }
-
-    .file-selected-info {
-        margin-top: 10px;
-        padding: 12px 14px;
-    }
-
-    .selected-file-details {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .clear-file-btn {
-        align-self: flex-start;
-    }
-
-    .qr-card-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .qr-actions {
-        justify-content: stretch;
-    }
-
-    .qr-actions button {
-        flex: 1;
-    }
-
-    .qr-codes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-
-    .filter-controls {
-        grid-template-columns: 1fr;
-    }
-
-    .search-box {
-        grid-column: auto;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .bulk-actions-toolbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 480px) {
     .qr-management-container {
-        padding: 15px;
-    }
-
-    .qr-header h1 {
-        font-size: 1.5em;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
     }
 
     .qr-header {
-        margin-bottom: 30px;
+        text-align: center;
+        margin-bottom: 40px;
+        animation: slideInUp 0.5s ease-out;
+    }
+
+    .qr-header h1 {
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 10px;
     }
 
     .qr-header p {
-        font-size: 0.95em;
-    }
-
-    .qr-upload-card {
-        padding: 16px;
-    }
-
-    .qr-upload-card h2 {
-        font-size: 1.2em;
-        margin-bottom: 12px;
-    }
-
-    .info-text {
-        margin-bottom: 16px;
-        font-size: 0.9em;
-    }
-
-    .csv-template-info {
-        margin-bottom: 16px;
-    }
-
-    .csv-template-info details {
-        padding: 12px;
-    }
-
-    .csv-template-info summary {
-        font-size: 0.9em;
-    }
-
-    .format-details {
-        padding: 0 12px 12px 12px;
-    }
-
-    .format-details ul {
-        font-size: 0.9em;
-    }
-
-    .format-details pre {
-        font-size: 0.75em;
-        padding: 10px;
-    }
-
-    .upload-form {
-        gap: 8px;
-    }
-
-    .file-label {
-        padding: 30px 15px;
-        min-height: 120px;
-        margin-bottom: 8px;
-    }
-
-    .file-icon {
-        font-size: 2em;
-        margin-bottom: 8px;
-    }
-
-    .file-label span:last-child {
-        font-size: 0.85em;
-    }
-
-    .file-selected-info {
-        margin-top: 8px;
-        padding: 10px 12px;
-    }
-
-    .selected-file-details {
-        gap: 8px;
-    }
-
-    .file-check-icon {
+        color: var(--navbar-text);
         font-size: 1.1em;
     }
 
-    .file-name {
+    /* Upload and Single Cards */
+    .qr-upload-card,
+    .qr-single-card {
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, var(--card-bg) 0%, rgba(42, 115, 255, 0.02) 100%);
+        border: 1px solid rgba(42, 115, 255, 0.1);
+    }
+
+    .qr-upload-card h2,
+    .qr-single-card h2 {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--primary-color);
+        font-size: 1.35em;
+    }
+
+    .info-text {
+        color: var(--navbar-text);
+        margin-bottom: 25px;
+        font-size: 0.95em;
+        line-height: 1.5;
+    }
+
+    .csv-template-info {
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+    .csv-template-info details {
+        padding: 15px;
+        cursor: pointer;
+    }
+
+    .csv-template-info summary {
+        font-weight: 600;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        outline: none;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    .csv-template-info summary:hover {
+        color: #1e52cc;
+        background: rgba(42, 115, 255, 0.05);
+    }
+
+    .csv-template-info details[open] summary {
+        margin-bottom: 5px;
+    }
+
+    .format-details {
+        padding: 0 15px 15px 15px;
+        border-top: 1px solid var(--border-color);
+        margin-top: 0;
+        animation: slideInDown 0.3s ease-out;
+    }
+
+    .format-details p {
+        margin-bottom: 10px;
+        font-size: 0.95em;
+    }
+
+    .format-details ul {
+        list-style-position: inside;
+        margin-bottom: 15px;
+        line-height: 1.8;
+        padding-left: 5px;
+    }
+
+    .format-details code {
+        background: var(--card-bg);
+        padding: 3px 7px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        color: var(--primary-color);
         font-size: 0.9em;
+        font-weight: 500;
     }
 
-    .file-size {
-        font-size: 0.75em;
+    .format-details pre {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 12px;
+        overflow-x: auto;
+        font-size: 0.85em;
+        line-height: 1.5;
+        margin-top: 10px;
     }
 
-    .upload-btn {
-        width: 100%;
-        padding: 10px 16px;
-        font-size: 0.9em;
+    /* Single Form Styles */
+    .single-qr-form {
+        margin-top: 20px;
     }
 
-    .btn-icon {
-        font-size: 1em;
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
     }
 
-    .qr-codes-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .qr-actions {
+    .form-group {
+        display: flex;
         flex-direction: column;
-        gap: 8px;
     }
-}
 
-@media (max-width: 360px) {
-    .qr-header h1 {
-        font-size: 1.3em;
+    .form-group label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--text-color);
+    }
+
+    .form-group.required label::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        border: 1px solid var(--input-border);
+        border-radius: 6px;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        font-family: inherit;
+        font-size: 0.95em;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.15);
+    }
+
+    .optional-fields-details {
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+    .optional-fields-details summary {
+        font-weight: 600;
+        color: var(--navbar-text);
+        transition: all 0.3s ease;
+        outline: none;
+        padding: 12px 15px;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .optional-fields-details summary:hover {
+        color: var(--primary-color);
+        background: rgba(42, 115, 255, 0.05);
+    }
+
+    html.dark-mode .optional-fields-details summary {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    html.dark-mode .optional-fields-details summary:hover {
+        background: rgba(42, 115, 255, 0.15);
+    }
+
+    .optional-fields-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        padding: 15px;
+        border-top: 1px solid var(--border-color);
+        animation: slideInDown 0.3s ease-out;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .generate-btn {
+        padding: 12px 25px;
+        font-size: 1.05em;
+    }
+
+    /* File Input */
+    .upload-form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .file-input-wrapper {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        grid-column: 1 / -1;
+    }
+
+    #csv-file {
+        display: none;
     }
 
     .file-label {
-        padding: 25px 12px;
-        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 25px;
+        border: 2.5px dashed var(--primary-color);
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.05), rgba(42, 115, 255, 0.01));
+        min-height: 150px;
+    }
+
+    .file-label:hover {
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.15), rgba(42, 115, 255, 0.08));
+        border-color: #1e52cc;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(42, 115, 255, 0.15);
     }
 
     .file-icon {
-        font-size: 1.8em;
+        font-size: 2.5em;
+        display: block;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .file-label:hover .file-icon {
+        transform: scale(1.15) rotate(5deg);
     }
 
     .file-label span:last-child {
-        font-size: 0.8em;
+        display: block;
+        color: var(--text-color);
+        font-weight: 500;
+        font-size: 0.95em;
+        line-height: 1.4;
+    }
+
+    .file-selected-info {
+        margin-top: 12px;
+        padding: 14px 16px;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+        border: 1.5px solid rgba(40, 167, 69, 0.35);
+        border-radius: 8px;
+        animation: slideInUp 0.3s ease-out;
+        grid-column: 1 / -1;
+    }
+
+    .selected-file-details {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .file-check-icon {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.3em;
+        flex-shrink: 0;
+    }
+
+    .file-info {
+        flex: 1;
+        min-width: 150px;
+        text-align: left;
+    }
+
+    .file-name {
+        font-weight: 700;
+        color: var(--text-color);
+        word-break: break-word;
+        font-size: 0.95em;
+        margin-bottom: 3px;
+    }
+
+    .file-size {
+        font-size: 0.82em;
+        color: var(--navbar-text);
+        margin-top: 3px;
+    }
+
+    .clear-file-btn {
+        background: rgba(220, 53, 69, 0.12);
+        border: 1.5px solid rgba(220, 53, 69, 0.35);
+        color: #dc3545;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        font-size: 0.95em;
+    }
+
+    .clear-file-btn:hover {
+        background: rgba(220, 53, 69, 0.2);
+        border-color: rgba(220, 53, 69, 0.5);
+        transform: scale(1.05);
     }
 
     .upload-btn {
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 22px;
+        font-size: 0.95em;
+        height: fit-content;
+    }
+
+    .btn-icon {
+        font-size: 1.15em;
+    }
+
+    /* Progress */
+    .progress-container {
+        margin-top: 20px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--input-border);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--primary-color);
+        border-radius: 4px;
+        animation: shimmer 2s infinite;
+    }
+
+    #progress-text {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    /* Results */
+    .upload-result {
+        margin-top: 20px;
+    }
+
+    .result-message {
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .result-message.success {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .result-message.error {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .error-list {
+        background: rgba(220, 53, 69, 0.08);
+        border: 1px solid rgba(220, 53, 69, 0.2);
+        border-radius: 6px;
+        padding: 15px;
+    }
+
+    .error-list h3 {
+        color: #dc3545;
+        margin-bottom: 10px;
+    }
+
+    .error-list ul {
+        list-style-position: inside;
+        color: #dc3545;
+    }
+
+    .error-list li {
+        margin-bottom: 5px;
+        font-size: 0.95em;
+    }
+
+    /* Display Card */
+    .qr-display-card {
+        margin-top: 30px;
+    }
+
+    .qr-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .qr-card-header h2 {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .qr-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .qr-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    /* Filter Section */
+    .qr-filter-section {
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .filter-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        align-items: end;
+    }
+
+    .search-box {
+        grid-column: 1 / -1;
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--card-bg);
+        color: var(--text-color);
+        font-size: 0.95em;
+        transition: all 0.2s ease;
+    }
+
+    .filter-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
+    }
+
+    .filter-controls label {
+        display: block;
+        font-size: 0.85em;
+        font-weight: 600;
+        color: var(--navbar-text);
+        margin-bottom: 6px;
+    }
+
+    .clear-filters-btn {
+        width: 100%;
+    }
+
+    /* Bulk Actions Toolbar */
+    .bulk-actions-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: rgba(42, 115, 255, 0.08);
+        border: 1px solid rgba(42, 115, 255, 0.2);
+        border-radius: 6px;
+        margin-bottom: 15px;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .bulk-select-all {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .select-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+    }
+
+    .selection-info {
+        font-size: 0.9em;
+        color: var(--navbar-text);
+        font-weight: 500;
+    }
+
+    .stat-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .stat-label {
+        color: var(--navbar-text);
+        font-weight: 500;
+    }
+
+    .stat-value {
+        font-size: 2em;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    /* QR Codes Grid */
+    .qr-codes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        min-height: 300px;
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 20px;
+        text-align: center;
+        color: var(--navbar-text);
+    }
+
+    .empty-state p {
+        margin: 5px 0;
+    }
+
+    .empty-state p:first-child {
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+
+    /* QR Code Card */
+    .qr-code-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 15px;
+        animation: slideInUp 0.4s ease-out;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .qr-code-card.selected {
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, var(--card-bg) 0%, rgba(42, 115, 255, 0.08) 100%);
+        box-shadow: 0 0 0 2px rgba(42, 115, 255, 0.1);
+    }
+
+    .qr-code-checkbox {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+        z-index: 5;
+    }
+
+    .qr-code-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    html.dark-mode .qr-code-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .qr-code-content {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .qr-code-img {
+        width: 100%;
+        max-width: 180px;
+        height: auto;
+    }
+
+    .qr-code-info {
+        margin-bottom: 15px;
+    }
+
+    .qr-code-id {
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 5px;
+        word-break: break-word;
+    }
+
+    .qr-code-name {
+        font-size: 0.95em;
+        color: var(--text-color);
+        word-break: break-word;
+    }
+
+    .qr-code-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+    }
+
+    .qr-code-actions button {
+        flex: 1;
         padding: 8px 12px;
         font-size: 0.85em;
     }
-}
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .qr-header h1 {
+            font-size: 1.8em;
+        }
+
+        .upload-form {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .upload-btn {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .file-label {
+            padding: 35px 20px;
+            min-height: 130px;
+        }
+
+        .file-icon {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .file-label span:last-child {
+            font-size: 0.9em;
+        }
+
+        .file-selected-info {
+            margin-top: 10px;
+            padding: 12px 14px;
+        }
+
+        .selected-file-details {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .clear-file-btn {
+            align-self: flex-start;
+        }
+
+        .qr-card-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .qr-actions {
+            justify-content: stretch;
+        }
+
+        .qr-actions button {
+            flex: 1;
+        }
+
+        .qr-codes-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        .filter-controls {
+            grid-template-columns: 1fr;
+        }
+
+        .search-box {
+            grid-column: auto;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .bulk-actions-toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .qr-management-container {
+            padding: 15px;
+        }
+
+        .qr-header h1 {
+            font-size: 1.5em;
+        }
+
+        .qr-header {
+            margin-bottom: 30px;
+        }
+
+        .qr-header p {
+            font-size: 0.95em;
+        }
+
+        .qr-upload-card {
+            padding: 16px;
+        }
+
+        .qr-upload-card h2 {
+            font-size: 1.2em;
+            margin-bottom: 12px;
+        }
+
+        .info-text {
+            margin-bottom: 16px;
+            font-size: 0.9em;
+        }
+
+        .csv-template-info {
+            margin-bottom: 16px;
+        }
+
+        .csv-template-info details {
+            padding: 12px;
+        }
+
+        .csv-template-info summary {
+            font-size: 0.9em;
+        }
+
+        .format-details {
+            padding: 0 12px 12px 12px;
+        }
+
+        .format-details ul {
+            font-size: 0.9em;
+        }
+
+        .format-details pre {
+            font-size: 0.75em;
+            padding: 10px;
+        }
+
+        .upload-form {
+            gap: 8px;
+        }
+
+        .file-label {
+            padding: 30px 15px;
+            min-height: 120px;
+            margin-bottom: 8px;
+        }
+
+        .file-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .file-label span:last-child {
+            font-size: 0.85em;
+        }
+
+        .file-selected-info {
+            margin-top: 8px;
+            padding: 10px 12px;
+        }
+
+        .selected-file-details {
+            gap: 8px;
+        }
+
+        .file-check-icon {
+            font-size: 1.1em;
+        }
+
+        .file-name {
+            font-size: 0.9em;
+        }
+
+        .file-size {
+            font-size: 0.75em;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.9em;
+        }
+
+        .btn-icon {
+            font-size: 1em;
+        }
+
+        .qr-codes-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .qr-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .qr-header h1 {
+            font-size: 1.3em;
+        }
+
+        .file-label {
+            padding: 25px 12px;
+            min-height: 110px;
+        }
+
+        .file-icon {
+            font-size: 1.8em;
+        }
+
+        .file-label span:last-child {
+            font-size: 0.8em;
+        }
+
+        .upload-btn {
+            padding: 8px 12px;
+            font-size: 0.85em;
+        }
+    }
 </style>
 
 <script>
-// Single QR Generate Handler
-const singleQrForm = document.getElementById('single-qr-form');
+    // Single QR Generate Handler
+    const singleQrForm = document.getElementById('single-qr-form');
 
-singleQrForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(singleQrForm);
-    const data = Object.fromEntries(formData.entries());
-    
-    const generateBtn = singleQrForm.querySelector('.generate-btn');
-    const originalBtnContent = generateBtn.innerHTML;
-    generateBtn.innerHTML = '<span class="loading-spinner"></span> Generating...';
-    generateBtn.disabled = true;
-    
-    const resultDiv = document.getElementById('single-qr-result');
-    const resultMessage = document.getElementById('single-result-message');
-    
-    resultDiv.style.display = 'none';
-    
-    try {
-        const response = await fetch('{{ url_for("qr_mgmt.generate_single") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        const responseData = await response.json();
-        
-        resultDiv.style.display = 'block';
-        
-        if (responseData.success) {
-            resultMessage.className = 'result-message success';
-            resultMessage.textContent = `✓ ${responseData.message}`;
-            
-            // clear form
-            singleQrForm.reset();
-            
-            // Refresh QR codes
-            setTimeout(() => loadQRCodes(), 1000);
-        } else {
-            resultMessage.className = 'result-message error';
-            resultMessage.textContent = `✗ ${responseData.message}`;
-        }
-    } catch (error) {
-        resultDiv.style.display = 'block';
-        resultMessage.className = 'result-message error';
-        resultMessage.textContent = `✗ Error: ${error.message}`;
-    } finally {
-        generateBtn.innerHTML = originalBtnContent;
-        generateBtn.disabled = false;
-    }
-});
+    singleQrForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-// CSV Upload Handler
-const csvForm = document.getElementById('csv-upload-form');
-const csvFileInput = document.getElementById('csv-file');
-const fileLabel = document.querySelector('.file-label');
-const fileSelectedInfo = document.getElementById('file-selected-info');
-const selectedFileName = document.getElementById('selected-file-name');
-const selectedFileSize = document.getElementById('selected-file-size');
-const clearFileBtn = document.getElementById('clear-file-btn');
+        const formData = new FormData(singleQrForm);
+        const data = Object.fromEntries(formData.entries());
 
-// Function to format file size
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-}
+        const generateBtn = singleQrForm.querySelector('.generate-btn');
+        const originalBtnContent = generateBtn.innerHTML;
+        generateBtn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+        generateBtn.disabled = true;
 
-// Function to update file display
-function updateFileDisplay(file) {
-    selectedFileName.textContent = file.name;
-    selectedFileSize.textContent = formatFileSize(file.size);
-    fileSelectedInfo.style.display = 'block';
-    fileLabel.style.opacity = '0.6';
-}
+        const resultDiv = document.getElementById('single-qr-result');
+        const resultMessage = document.getElementById('single-result-message');
 
-// Function to clear file
-function clearFileSelection() {
-    csvFileInput.value = '';
-    fileSelectedInfo.style.display = 'none';
-    fileLabel.style.opacity = '1';
-}
+        resultDiv.style.display = 'none';
 
-// File input change event
-csvFileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        updateFileDisplay(file);
-    } else {
-        clearFileSelection();
-    }
-});
+        try {
+            const response = await fetch('{{ url_for("qr_mgmt.generate_single") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
 
-// Clear file button
-clearFileBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    clearFileSelection();
-});
+            const responseData = await response.json();
 
-// Drag and drop
-fileLabel.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    fileLabel.style.background = 'rgba(42, 115, 255, 0.15)';
-});
+            resultDiv.style.display = 'block';
 
-fileLabel.addEventListener('dragleave', () => {
-    if (csvFileInput.files.length === 0) {
-        fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
-    }
-});
+            if (responseData.success) {
+                resultMessage.className = 'result-message success';
+                resultMessage.textContent = `✓ ${responseData.message}`;
 
-fileLabel.addEventListener('drop', (e) => {
-    e.preventDefault();
-    fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
-    
-    if (e.dataTransfer.files.length > 0) {
-        const file = e.dataTransfer.files[0];
-        csvFileInput.files = e.dataTransfer.files;
-        updateFileDisplay(file);
-    }
-});
+                // clear form
+                singleQrForm.reset();
 
-// Form submission
-csvForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const file = csvFileInput.files[0];
-    if (!file) {
-        alert('Please select a CSV file');
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const progressContainer = document.getElementById('upload-progress');
-    const resultDiv = document.getElementById('upload-result');
-    const resultMessage = document.getElementById('result-message');
-    const errorList = document.getElementById('error-list');
-    const errorItems = document.getElementById('error-items');
-
-    progressContainer.style.display = 'block';
-    resultDiv.style.display = 'none';
-
-    try {
-        const response = await fetch('{{ url_for("qr_mgmt.upload_csv") }}', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-
-        progressContainer.style.display = 'none';
-        resultDiv.style.display = 'block';
-
-        if (data.success) {
-            resultMessage.className = 'result-message success';
-            resultMessage.textContent = `✓ ${data.message}`;
-            
-            if (data.errors && data.errors.length > 0) {
-                errorList.style.display = 'block';
-                errorItems.innerHTML = '';
-                data.errors.forEach(error => {
-                    const li = document.createElement('li');
-                    li.textContent = error;
-                    errorItems.appendChild(li);
-                });
+                // Refresh QR codes
+                setTimeout(() => loadQRCodes(), 1000);
             } else {
+                resultMessage.className = 'result-message error';
+                resultMessage.textContent = `✗ ${responseData.message}`;
+            }
+        } catch (error) {
+            resultDiv.style.display = 'block';
+            resultMessage.className = 'result-message error';
+            resultMessage.textContent = `✗ Error: ${error.message}`;
+        } finally {
+            generateBtn.innerHTML = originalBtnContent;
+            generateBtn.disabled = false;
+        }
+    });
+
+    // CSV Upload Handler
+    const csvForm = document.getElementById('csv-upload-form');
+    const csvFileInput = document.getElementById('csv-file');
+    const fileLabel = document.querySelector('.file-label');
+    const fileSelectedInfo = document.getElementById('file-selected-info');
+    const selectedFileName = document.getElementById('selected-file-name');
+    const selectedFileSize = document.getElementById('selected-file-size');
+    const clearFileBtn = document.getElementById('clear-file-btn');
+
+    // Function to format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    // Function to update file display
+    function updateFileDisplay(file) {
+        selectedFileName.textContent = file.name;
+        selectedFileSize.textContent = formatFileSize(file.size);
+        fileSelectedInfo.style.display = 'block';
+        fileLabel.style.opacity = '0.6';
+    }
+
+    // Function to clear file
+    function clearFileSelection() {
+        csvFileInput.value = '';
+        fileSelectedInfo.style.display = 'none';
+        fileLabel.style.opacity = '1';
+    }
+
+    // File input change event
+    csvFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            updateFileDisplay(file);
+        } else {
+            clearFileSelection();
+        }
+    });
+
+    // Clear file button
+    clearFileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearFileSelection();
+    });
+
+    // Drag and drop
+    fileLabel.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileLabel.style.background = 'rgba(42, 115, 255, 0.15)';
+    });
+
+    fileLabel.addEventListener('dragleave', () => {
+        if (csvFileInput.files.length === 0) {
+            fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
+        }
+    });
+
+    fileLabel.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileLabel.style.background = 'rgba(42, 115, 255, 0.02)';
+
+        if (e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            csvFileInput.files = e.dataTransfer.files;
+            updateFileDisplay(file);
+        }
+    });
+
+    // Form submission
+    csvForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const file = csvFileInput.files[0];
+        if (!file) {
+            alert('Please select a CSV file');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const progressContainer = document.getElementById('upload-progress');
+        const resultDiv = document.getElementById('upload-result');
+        const resultMessage = document.getElementById('result-message');
+        const errorList = document.getElementById('error-list');
+        const errorItems = document.getElementById('error-items');
+
+        progressContainer.style.display = 'block';
+        resultDiv.style.display = 'none';
+
+        try {
+            const response = await fetch('{{ url_for("qr_mgmt.upload_csv") }}', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            progressContainer.style.display = 'none';
+            resultDiv.style.display = 'block';
+
+            if (data.success) {
+                resultMessage.className = 'result-message success';
+                resultMessage.textContent = `✓ ${data.message}`;
+
+                if (data.errors && data.errors.length > 0) {
+                    errorList.style.display = 'block';
+                    errorItems.innerHTML = '';
+                    data.errors.forEach(error => {
+                        const li = document.createElement('li');
+                        li.textContent = error;
+                        errorItems.appendChild(li);
+                    });
+                } else {
+                    errorList.style.display = 'none';
+                }
+
+                clearFileSelection();
+
+                // Refresh QR codes
+                setTimeout(() => loadQRCodes(), 1000);
+            } else {
+                resultMessage.className = 'result-message error';
+                resultMessage.textContent = `✗ ${data.error || data.message}`;
                 errorList.style.display = 'none';
             }
-
-            clearFileSelection();
-            
-            // Refresh QR codes
-            setTimeout(() => loadQRCodes(), 1000);
-        } else {
+        } catch (error) {
+            progressContainer.style.display = 'none';
+            resultDiv.style.display = 'block';
             resultMessage.className = 'result-message error';
-            resultMessage.textContent = `✗ ${data.error || data.message}`;
+            resultMessage.textContent = `✗ Error: ${error.message}`;
             errorList.style.display = 'none';
         }
-    } catch (error) {
-        progressContainer.style.display = 'none';
-        resultDiv.style.display = 'block';
-        resultMessage.className = 'result-message error';
-        resultMessage.textContent = `✗ Error: ${error.message}`;
-        errorList.style.display = 'none';
-    }
-});
+    });
 
-// Load QR Codes
-let allQRCodes = [];
-async function loadQRCodes() {
-    try {
-        const response = await fetch('{{ url_for("qr_mgmt.get_qr_codes") }}');
-        const data = await response.json();
+    // Load QR Codes
+    let allQRCodes = [];
+    async function loadQRCodes() {
+        try {
+            const response = await fetch('{{ url_for("qr_mgmt.get_qr_codes") }}');
+            const data = await response.json();
 
-        console.log('QR Codes loaded:', data);
+            console.log('QR Codes loaded:', data);
 
-        const container = document.getElementById('qr-codes-container');
-        const totalCount = document.getElementById('total-qr-count');
+            const container = document.getElementById('qr-codes-container');
+            const totalCount = document.getElementById('total-qr-count');
 
-        if (data.success && data.qr_codes.length > 0) {
-            allQRCodes = data.qr_codes;
-            totalCount.textContent = data.count;
-            
-            // Populate filter dropdowns
-            populateFilterOptions();
-            
-            // Display QR codes
-            displayQRCodes(data.qr_codes);
-        } else {
-            allQRCodes = [];
-            totalCount.textContent = '0';
-            container.innerHTML = `
+            if (data.success && data.qr_codes.length > 0) {
+                allQRCodes = data.qr_codes;
+                totalCount.textContent = data.count;
+
+                // Populate filter dropdowns
+                populateFilterOptions();
+
+                // Display QR codes
+                displayQRCodes(data.qr_codes);
+            } else {
+                allQRCodes = [];
+                totalCount.textContent = '0';
+                container.innerHTML = `
                 <div class="empty-state">
                     <p>No QR codes generated yet</p>
                     <p>Upload a CSV file to get started</p>
                 </div>
             `;
+            }
+        } catch (error) {
+            console.error('Error loading QR codes:', error);
+            alert('Error loading QR codes: ' + error.message);
         }
-    } catch (error) {
-        console.error('Error loading QR codes:', error);
-        alert('Error loading QR codes: ' + error.message);
     }
-}
 
-// Compare function to get filtered QR codes
-function getFilteredQRCodes() {
-    const searchTerm = document.getElementById('search-qr').value.toLowerCase();
-    const courseFilter = document.getElementById('course-filter').value;
-    const yearFilter = document.getElementById('year-filter').value;
-    const sectionFilter = document.getElementById('section-filter').value;
+    // Compare function to get filtered QR codes
+    function getFilteredQRCodes() {
+        const searchTerm = document.getElementById('search-qr').value.toLowerCase();
+        const courseFilter = document.getElementById('course-filter').value;
+        const yearFilter = document.getElementById('year-filter').value;
+        const sectionFilter = document.getElementById('section-filter').value;
 
-    return allQRCodes.filter(qr => {
-        const matchesSearch = !searchTerm || 
-            qr.school_id.toLowerCase().includes(searchTerm) || 
-            qr.name.toLowerCase().includes(searchTerm);
-        
-        const matchesCourse = !courseFilter || (qr.course && qr.course === courseFilter);
-        const matchesYear = !yearFilter || (qr.year && qr.year === yearFilter);
-        const matchesSection = !sectionFilter || (qr.section && qr.section === sectionFilter);
+        return allQRCodes.filter(qr => {
+            const matchesSearch = !searchTerm ||
+                qr.school_id.toLowerCase().includes(searchTerm) ||
+                qr.name.toLowerCase().includes(searchTerm);
 
-        return matchesSearch && matchesCourse && matchesYear && matchesSection;
-    });
-}
+            const matchesCourse = !courseFilter || (qr.course && qr.course === courseFilter);
+            const matchesYear = !yearFilter || (qr.year && qr.year === yearFilter);
+            const matchesSection = !sectionFilter || (qr.section && qr.section === sectionFilter);
 
-// Populate filter options
-function populateFilterOptions() {
-    const courses = new Set();
-    const years = new Set();
-    const sections = new Set();
+            return matchesSearch && matchesCourse && matchesYear && matchesSection;
+        });
+    }
 
-    allQRCodes.forEach(qr => {
-        if (qr.course) courses.add(qr.course);
-        if (qr.year) years.add(qr.year);
-        if (qr.section) sections.add(qr.section);
-    });
+    // Populate filter options
+    function populateFilterOptions() {
+        const courses = new Set();
+        const years = new Set();
+        const sections = new Set();
 
-    // Populate course filter
-    const courseFilter = document.getElementById('course-filter');
-    [...courses].sort().forEach(course => {
-        if (![...courseFilter.options].map(o => o.value).includes(course)) {
-            const option = document.createElement('option');
-            option.value = course;
-            option.textContent = course;
-            courseFilter.appendChild(option);
-        }
-    });
+        allQRCodes.forEach(qr => {
+            if (qr.course) courses.add(qr.course);
+            if (qr.year) years.add(qr.year);
+            if (qr.section) sections.add(qr.section);
+        });
 
-    // Populate year filter
-    const yearFilter = document.getElementById('year-filter');
-    [...years].sort().forEach(year => {
-        if (![...yearFilter.options].map(o => o.value).includes(year)) {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearFilter.appendChild(option);
-        }
-    });
+        // Populate course filter
+        const courseFilter = document.getElementById('course-filter');
+        [...courses].sort().forEach(course => {
+            if (![...courseFilter.options].map(o => o.value).includes(course)) {
+                const option = document.createElement('option');
+                option.value = course;
+                option.textContent = course;
+                courseFilter.appendChild(option);
+            }
+        });
 
-    // Populate section filter
-    const sectionFilter = document.getElementById('section-filter');
-    [...sections].sort().forEach(section => {
-        if (![...sectionFilter.options].map(o => o.value).includes(section)) {
-            const option = document.createElement('option');
-            option.value = section;
-            option.textContent = section;
-            sectionFilter.appendChild(option);
-        }
-    });
-}
+        // Populate year filter
+        const yearFilter = document.getElementById('year-filter');
+        [...years].sort().forEach(year => {
+            if (![...yearFilter.options].map(o => o.value).includes(year)) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            }
+        });
 
-// Display QR codes
-function displayQRCodes(qrCodes) {
-    const container = document.getElementById('qr-codes-container');
-    const filteredCount = document.getElementById('filtered-qr-count');
+        // Populate section filter
+        const sectionFilter = document.getElementById('section-filter');
+        [...sections].sort().forEach(section => {
+            if (![...sectionFilter.options].map(o => o.value).includes(section)) {
+                const option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionFilter.appendChild(option);
+            }
+        });
+    }
 
-    if (qrCodes.length === 0) {
-        container.innerHTML = `
+    // Display QR codes
+    function displayQRCodes(qrCodes) {
+        const container = document.getElementById('qr-codes-container');
+        const filteredCount = document.getElementById('filtered-qr-count');
+
+        if (qrCodes.length === 0) {
+            container.innerHTML = `
             <div class="empty-state">
                 <p>No QR codes match your filters</p>
             </div>
         `;
-        filteredCount.textContent = '0';
-        return;
-    }
+            filteredCount.textContent = '0';
+            return;
+        }
 
-    filteredCount.textContent = qrCodes.length;
-    container.innerHTML = '';
+        filteredCount.textContent = qrCodes.length;
+        container.innerHTML = '';
 
-    qrCodes.forEach(qr => {
-        const card = document.createElement('div');
-        card.className = 'qr-code-card';
-        card.setAttribute('data-school-id', qr.school_id);
-        card.innerHTML = `
+        qrCodes.forEach(qr => {
+            const card = document.createElement('div');
+            card.className = 'qr-code-card';
+            card.setAttribute('data-school-id', qr.school_id);
+            card.innerHTML = `
             <input type="checkbox" class="qr-code-checkbox select-qr-checkbox" data-school-id="${qr.school_id}">
             <div class="qr-code-content">
                 <img src="data:image/png;base64,${qr.qr_image}" alt="QR Code" class="qr-code-img">
@@ -1450,199 +1466,199 @@ function displayQRCodes(qrCodes) {
                 </button>
             </div>
         `;
-        container.appendChild(card);
-        
-        // Add checkbox event listener
-        const checkbox = card.querySelector('.select-qr-checkbox');
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
+            container.appendChild(card);
+
+            // Add checkbox event listener
+            const checkbox = card.querySelector('.select-qr-checkbox');
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+                updateSelectionUI();
+            });
+        });
+
+        updateSelectionUI();
+    }
+
+    // Update selection UI
+    function updateSelectionUI() {
+        const selectedCount = document.querySelectorAll('.select-qr-checkbox:checked').length;
+        const selectedCountEl = document.getElementById('selected-qr-count');
+        const bulkActionsToolbar = document.getElementById('bulk-actions');
+        const bulkDeleteBtn = document.getElementById('delete-selected-btn');
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+
+        selectedCountEl.textContent = selectedCount;
+
+        if (selectedCount > 0) {
+            bulkActionsToolbar.style.display = 'flex';
+            bulkDeleteBtn.style.display = 'block';
+            document.getElementById('selection-info').textContent = `${selectedCount} QR code${selectedCount !== 1 ? 's' : ''} selected`;
+        } else {
+            bulkActionsToolbar.style.display = 'none';
+            bulkDeleteBtn.style.display = 'none';
+            selectAllCheckbox.checked = false;
+        }
+
+        // Update select all checkbox state
+        const allCheckboxes = document.querySelectorAll('.select-qr-checkbox');
+        const allChecked = allCheckboxes.length > 0 && [...allCheckboxes].every(cb => cb.checked);
+        selectAllCheckbox.checked = allChecked;
+    }
+
+    // Select All functionality
+    document.getElementById('select-all-checkbox').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('.select-qr-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+            const card = checkbox.closest('.qr-code-card');
+            if (this.checked) {
                 card.classList.add('selected');
             } else {
                 card.classList.remove('selected');
             }
-            updateSelectionUI();
         });
+        updateSelectionUI();
     });
 
-    updateSelectionUI();
-}
+    // Filter handlers
+    document.getElementById('search-qr').addEventListener('input', () => {
+        displayQRCodes(getFilteredQRCodes());
+    });
 
-// Update selection UI
-function updateSelectionUI() {
-    const selectedCount = document.querySelectorAll('.select-qr-checkbox:checked').length;
-    const selectedCountEl = document.getElementById('selected-qr-count');
-    const bulkActionsToolbar = document.getElementById('bulk-actions');
-    const bulkDeleteBtn = document.getElementById('delete-selected-btn');
-    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    document.getElementById('course-filter').addEventListener('change', () => {
+        displayQRCodes(getFilteredQRCodes());
+    });
 
-    selectedCountEl.textContent = selectedCount;
+    document.getElementById('year-filter').addEventListener('change', () => {
+        displayQRCodes(getFilteredQRCodes());
+    });
 
-    if (selectedCount > 0) {
-        bulkActionsToolbar.style.display = 'flex';
-        bulkDeleteBtn.style.display = 'block';
-        document.getElementById('selection-info').textContent = `${selectedCount} QR code${selectedCount !== 1 ? 's' : ''} selected`;
-    } else {
-        bulkActionsToolbar.style.display = 'none';
-        bulkDeleteBtn.style.display = 'none';
-        selectAllCheckbox.checked = false;
-    }
+    document.getElementById('section-filter').addEventListener('change', () => {
+        displayQRCodes(getFilteredQRCodes());
+    });
 
-    // Update select all checkbox state
-    const allCheckboxes = document.querySelectorAll('.select-qr-checkbox');
-    const allChecked = allCheckboxes.length > 0 && [...allCheckboxes].every(cb => cb.checked);
-    selectAllCheckbox.checked = allChecked;
-}
+    // Clear filters
+    document.getElementById('clear-filters-btn').addEventListener('click', () => {
+        document.getElementById('search-qr').value = '';
+        document.getElementById('course-filter').value = '';
+        document.getElementById('year-filter').value = '';
+        document.getElementById('section-filter').value = '';
+        displayQRCodes(allQRCodes);
+    });
 
-// Select All functionality
-document.getElementById('select-all-checkbox').addEventListener('change', function() {
-    const checkboxes = document.querySelectorAll('.select-qr-checkbox');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = this.checked;
-        const card = checkbox.closest('.qr-code-card');
-        if (this.checked) {
-            card.classList.add('selected');
-        } else {
-            card.classList.remove('selected');
+    // Delete Selected
+    document.getElementById('delete-selected-btn').addEventListener('click', async () => {
+        const selectedCheckboxes = document.querySelectorAll('.select-qr-checkbox:checked');
+        const schoolIds = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-school-id'));
+
+        if (schoolIds.length === 0) {
+            alert('Please select at least one QR code to delete');
+            return;
         }
+
+        showDeleteModal(
+            `${schoolIds.length} QR code${schoolIds.length !== 1 ? 's' : ''}`,
+            async () => {
+                try {
+                    const response = await fetch('{{ url_for("qr_mgmt.delete_bulk_qr") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ school_ids: schoolIds })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success';
+                        alertDiv.textContent = `Successfully deleted ${data.deleted_count} QR code${data.deleted_count !== 1 ? 's' : ''}`;
+                        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+
+                        setTimeout(loadQRCodes, 500);
+                    } else {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-danger';
+                        alertDiv.textContent = 'Error: ' + data.error;
+                        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                    }
+                } catch (error) {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger';
+                    alertDiv.textContent = 'Error: ' + error.message;
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                }
+            },
+            `ID${schoolIds.length !== 1 ? 's' : ''}: ${schoolIds.join(', ')}`
+        );
     });
-    updateSelectionUI();
-});
 
-// Filter handlers
-document.getElementById('search-qr').addEventListener('input', () => {
-    displayQRCodes(getFilteredQRCodes());
-});
-
-document.getElementById('course-filter').addEventListener('change', () => {
-    displayQRCodes(getFilteredQRCodes());
-});
-
-document.getElementById('year-filter').addEventListener('change', () => {
-    displayQRCodes(getFilteredQRCodes());
-});
-
-document.getElementById('section-filter').addEventListener('change', () => {
-    displayQRCodes(getFilteredQRCodes());
-});
-
-// Clear filters
-document.getElementById('clear-filters-btn').addEventListener('click', () => {
-    document.getElementById('search-qr').value = '';
-    document.getElementById('course-filter').value = '';
-    document.getElementById('year-filter').value = '';
-    document.getElementById('section-filter').value = '';
-    displayQRCodes(allQRCodes);
-});
-
-// Delete Selected
-document.getElementById('delete-selected-btn').addEventListener('click', async () => {
-    const selectedCheckboxes = document.querySelectorAll('.select-qr-checkbox:checked');
-    const schoolIds = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-school-id'));
-
-    if (schoolIds.length === 0) {
-        alert('Please select at least one QR code to delete');
-        return;
+    // Download single QR code
+    function downloadSingleQR(schoolId) {
+        window.location.href = `{{ url_for("qr_mgmt.download_single_qr", school_id="PLACEHOLDER") }}`.replace('PLACEHOLDER', schoolId);
     }
 
-    showDeleteModal(
-        `${schoolIds.length} QR code${schoolIds.length !== 1 ? 's' : ''}`,
-        async () => {
-            try {
-                const response = await fetch('{{ url_for("qr_mgmt.delete_bulk_qr") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ school_ids: schoolIds })
-                });
+    // Delete QR code
+    async function deleteQRCode(schoolId) {
+        // Find the QR card to get the name
+        const qrCard = document.querySelector(`[data-school-id="${schoolId}"]`);
+        const qrName = qrCard ? qrCard.querySelector('.qr-code-name')?.textContent || schoolId : schoolId;
 
-                const data = await response.json();
+        showDeleteModal(
+            qrName,
+            async () => {
+                try {
+                    const response = await fetch(`{{ url_for("qr_mgmt.delete_qr", school_id="PLACEHOLDER") }}`.replace('PLACEHOLDER', schoolId), {
+                        method: 'POST'
+                    });
 
-                if (data.success) {
-                    const alertDiv = document.createElement('div');
-                    alertDiv.className = 'alert alert-success';
-                    alertDiv.textContent = `Successfully deleted ${data.deleted_count} QR code${data.deleted_count !== 1 ? 's' : ''}`;
-                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
-                    
-                    setTimeout(loadQRCodes, 500);
-                } else {
-                    const alertDiv = document.createElement('div');
-                    alertDiv.className = 'alert alert-danger';
-                    alertDiv.textContent = 'Error: ' + data.error;
-                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
-                }
-            } catch (error) {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.textContent = 'Error: ' + error.message;
-                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
-            }
-        },
-        `ID${schoolIds.length !== 1 ? 's' : ''}: ${schoolIds.join(', ')}`
-    );
-});
+                    const data = await response.json();
 
-// Download single QR code
-function downloadSingleQR(schoolId) {
-    window.location.href = `{{ url_for("qr_mgmt.download_single_qr", school_id="PLACEHOLDER") }}`.replace('PLACEHOLDER', schoolId);
-}
+                    if (data.success) {
+                        // Show success message
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success';
+                        alertDiv.textContent = 'QR code deleted successfully';
+                        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
 
-// Delete QR code
-async function deleteQRCode(schoolId) {
-    // Find the QR card to get the name
-    const qrCard = document.querySelector(`[data-school-id="${schoolId}"]`);
-    const qrName = qrCard ? qrCard.querySelector('.qr-code-name')?.textContent || schoolId : schoolId;
-    
-    showDeleteModal(
-        qrName,
-        async () => {
-            try {
-                const response = await fetch(`{{ url_for("qr_mgmt.delete_qr", school_id="PLACEHOLDER") }}`.replace('PLACEHOLDER', schoolId), {
-                    method: 'POST'
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Show success message
-                    const alertDiv = document.createElement('div');
-                    alertDiv.className = 'alert alert-success';
-                    alertDiv.textContent = 'QR code deleted successfully';
-                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
-                    
-                    // Reload QR codes
-                    setTimeout(loadQRCodes, 500);
-                } else {
+                        // Reload QR codes
+                        setTimeout(loadQRCodes, 500);
+                    } else {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-danger';
+                        alertDiv.textContent = 'Error: ' + data.error;
+                        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                    }
+                } catch (error) {
                     const alertDiv = document.createElement('div');
                     alertDiv.className = 'alert alert-danger';
-                    alertDiv.textContent = 'Error: ' + data.error;
+                    alertDiv.textContent = 'Error: ' + error.message;
                     document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
                 }
-            } catch (error) {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.textContent = 'Error: ' + error.message;
-                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
-            }
-        },
-        `ID: ${schoolId}`
-    );
-}
+            },
+            `ID: ${schoolId}`
+        );
+    }
 
-// Refresh button
-document.getElementById('refresh-btn').addEventListener('click', loadQRCodes);
+    // Refresh button
+    document.getElementById('refresh-btn').addEventListener('click', loadQRCodes);
 
-// Download all button
-document.getElementById('download-all-btn').addEventListener('click', () => {
-    window.location.href = '{{ url_for("qr_mgmt.download_all_qr") }}';
-});
+    // Download all button
+    document.getElementById('download-all-btn').addEventListener('click', () => {
+        window.location.href = '{{ url_for("qr_mgmt.download_all_qr") }}';
+    });
 
-// Export CSV button
-document.getElementById('export-csv-btn').addEventListener('click', () => {
-    window.location.href = '{{ url_for("qr_mgmt.export_csv") }}';
-});
+    // Export CSV button
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+        window.location.href = '{{ url_for("qr_mgmt.export_csv") }}';
+    });
 
-// Load QR codes on page load
-document.addEventListener('DOMContentLoaded', loadQRCodes);
+    // Load QR codes on page load
+    document.addEventListener('DOMContentLoaded', loadQRCodes);
 </script>
 {% endblock %}

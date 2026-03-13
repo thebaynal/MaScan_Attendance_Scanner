@@ -200,8 +200,19 @@ def generate_single():
         course = data.get('course', '')
         
         # Validate required fields
-        if not school_id or not name:
-            return jsonify({'success': False, 'message': 'School ID and Name are required'}), 400
+        required_fields = {
+            'school_id': school_id,
+            'name': name,
+            'first_name': first_name,
+            'last_name': last_name,
+            'course': course,
+            'year_level': year_level,
+            'section': section
+        }
+        
+        missing_fields = [k.replace('_', ' ').title() for k, v in required_fields.items() if not v or not str(v).strip()]
+        if missing_fields:
+            return jsonify({'success': False, 'message': f'Required fields missing: {", ".join(missing_fields)}'}), 400
             
         # Check if student already exists
         existing = db._execute(
