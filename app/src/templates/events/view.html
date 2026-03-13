@@ -21,7 +21,7 @@
                 <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="action-btn primary">
                     <span>✏️</span> Edit Event
                 </a>
-                <a href="{{ url_for('event.export_event', event_id=event[0]) }}" class="action-btn secondary">
+                <a href="#" onclick="exportEventPDF('{{ event[0] }}'); return false;" class="action-btn secondary">
                     <span>📥</span> Export PDF
                 </a>
                 {% endif %}
@@ -466,6 +466,157 @@
     .col-slot,
     .col-status {
         text-align: left;
+    }
+}
+</style>
+
+<script>
+async function exportEventPDF(eventId) {
+    try {
+        const response = await fetch(`/events/${eventId}/export-api`);
+        
+        if (!response.ok) {
+            const data = await response.json();
+            showExportErrorModal(data.error || 'Export failed', data.message || 'Unable to export PDF');
+            return;
+        }
+        
+        // Download the file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'attendance.pdf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+        
+    } catch (error) {
+        showExportErrorModal('Export Error', error.message || 'Failed to export PDF');
+    }
+}
+
+function showExportErrorModal(title, message) {
+    document.getElementById('export-error-modal-title').textContent = title;
+    document.getElementById('export-error-modal-message').textContent = message;
+    document.getElementById('export-error-modal').style.display = 'block';
+}
+
+function closeExportErrorModal() {
+    document.getElementById('export-error-modal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('export-error-modal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+
+<!-- Export Error Modal -->
+<div id="export-error-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="export-error-modal-title">Error</h2>
+            <button class="modal-close" onclick="closeExportErrorModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="export-error-modal-message"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="closeExportErrorModal()">OK</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 15% auto;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #dc3545;
+    font-size: 1.5em;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--text-color);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: #dc3545;
+}
+
+.modal-body {
+    padding: 20px;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.modal-body p {
+    margin: 0;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 </style>
