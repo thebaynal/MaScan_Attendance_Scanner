@@ -15,6 +15,7 @@ reportlab==4.0.7
 qrcode==7.4.2
 Pillow==10.1.0
 pyzbar==0.1.9
+opencv-python==4.10.0.84
 
 # Utilities
 numpy==2.4.2
