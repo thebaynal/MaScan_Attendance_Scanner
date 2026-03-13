@@ -22,9 +22,9 @@ def manage_qr():
     username = session.get('username')
     user = db.get_user(username)
     
-    # Get all students with QR codes
+    # Get all students with QR codes including section info
     students = db._execute(
-        "SELECT school_id, name, last_name, first_name, middle_initial, qr_data FROM students_qrcodes ORDER BY created_at DESC",
+        "SELECT school_id, name, last_name, first_name, middle_initial, qr_data, section, year_level FROM students_qrcodes ORDER BY created_at DESC",
         fetch_all=True
     ) or []
     
@@ -180,10 +180,10 @@ def upload_csv():
 @qr_mgmt_bp.route('/qr-codes', methods=['GET'])
 @admin_required
 def get_qr_codes():
-    """Get all QR codes."""
+    """Get all QR codes with section and year information."""
     try:
         students = db._execute(
-            "SELECT school_id, name, qr_data_encoded FROM students_qrcodes ORDER BY created_at DESC",
+            "SELECT school_id, name, qr_data_encoded, section, year_level FROM students_qrcodes ORDER BY created_at DESC",
             fetch_all=True
         ) or []
         
@@ -191,7 +191,9 @@ def get_qr_codes():
             {
                 'school_id': row[0],
                 'name': row[1],
-                'qr_image': row[2]
+                'qr_image': row[2],
+                'section': row[3],
+                'year': row[4]
             }
             for row in students
         ]
@@ -321,6 +323,45 @@ def delete_qr(school_id):
         return jsonify({
             'success': True,
             'message': 'QR code deleted successfully'
+        }), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@qr_mgmt_bp.route('/delete-bulk-qr', methods=['POST'])
+@admin_required
+def delete_bulk_qr():
+    """Delete multiple QR code entries."""
+    try:
+        data = request.get_json()
+        school_ids = data.get('school_ids', [])
+        
+        if not school_ids:
+            return jsonify({'error': 'No QR codes selected'}), 400
+        
+        # Delete multiple records
+        placeholders = ','.join('?' * len(school_ids))
+        db._execute(
+            f"DELETE FROM students_qrcodes WHERE school_id IN ({placeholders})",
+            tuple(school_ids),
+            commit=True
+        )
+        
+        # Record activity
+        username = session.get('username')
+        db._execute(
+            """INSERT INTO activity_log 
+               (timestamp, action, user, details)
+               VALUES (?, ?, ?, ?)""",
+            (datetime.now().isoformat(), 'DELETE_BULK_QR_CODES', username, f'Deleted {len(school_ids)} QR codes'),
+            commit=True
+        )
+        
+        return jsonify({
+            'success': True,
+            'message': f'Successfully deleted {len(school_ids)} QR codes',
+            'deleted_count': len(school_ids)
         }), 200
     
     except Exception as e:

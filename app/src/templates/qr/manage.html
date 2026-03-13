@@ -88,6 +88,29 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
                 <button id="refresh-btn" class="btn btn-secondary btn-small">🔄 Refresh</button>
                 <button id="download-all-btn" class="btn btn-success btn-small">⬇️ Download All</button>
                 <button id="export-csv-btn" class="btn btn-secondary btn-small">📥 Export CSV</button>
+                <button id="delete-selected-btn" class="btn btn-danger btn-small" style="display: none;">🗑️ Delete Selected</button>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="qr-filter-section">
+            <div class="filter-controls">
+                <div class="search-box">
+                    <input type="text" id="search-qr" placeholder="🔍 Search by name or ID..." class="filter-input">
+                </div>
+                <div class="section-filter">
+                    <label for="section-filter">Filter by Section:</label>
+                    <select id="section-filter" class="filter-input">
+                        <option value="">All Sections</option>
+                    </select>
+                </div>
+                <div class="year-filter">
+                    <label for="year-filter">Filter by Year:</label>
+                    <select id="year-filter" class="filter-input">
+                        <option value="">All Years</option>
+                    </select>
+                </div>
+                <button id="clear-filters-btn" class="btn btn-secondary btn-small">Clear Filters</button>
             </div>
         </div>
 
@@ -96,6 +119,23 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
                 <span class="stat-label">Total QR Codes</span>
                 <span class="stat-value" id="total-qr-count">0</span>
             </div>
+            <div class="stat-box">
+                <span class="stat-label">Filtered Results</span>
+                <span class="stat-value" id="filtered-qr-count">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Selected</span>
+                <span class="stat-value" id="selected-qr-count">0</span>
+            </div>
+        </div>
+
+        <!-- Bulk Actions Toolbar -->
+        <div class="bulk-actions-toolbar" id="bulk-actions" style="display: none;">
+            <div class="bulk-select-all">
+                <input type="checkbox" id="select-all-checkbox" class="select-checkbox">
+                <label for="select-all-checkbox">Select All on This Page</label>
+            </div>
+            <span id="selection-info" class="selection-info"></span>
         </div>
 
         <div id="qr-codes-container" class="qr-codes-grid">
@@ -469,6 +509,87 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
     margin-bottom: 25px;
 }
 
+/* Filter Section */
+.qr-filter-section {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.filter-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+.search-box {
+    grid-column: 1 / -1;
+}
+
+.filter-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
+}
+
+.filter-controls label {
+    display: block;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--navbar-text);
+    margin-bottom: 6px;
+}
+
+.clear-filters-btn {
+    width: 100%;
+}
+
+/* Bulk Actions Toolbar */
+.bulk-actions-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(42, 115, 255, 0.08);
+    border: 1px solid rgba(42, 115, 255, 0.2);
+    border-radius: 6px;
+    margin-bottom: 15px;
+    animation: slideInUp 0.3s ease-out;
+}
+
+.bulk-select-all {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.select-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.selection-info {
+    font-size: 0.9em;
+    color: var(--navbar-text);
+    font-weight: 500;
+}
+
 .stat-box {
     display: flex;
     justify-content: space-between;
@@ -529,6 +650,24 @@ STU002,Jane Doe,Jane,Doe,1,B,IT</pre>
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.qr-code-card.selected {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(42, 115, 255, 0.08) 100%);
+    box-shadow: 0 0 0 2px rgba(42, 115, 255, 0.1);
+}
+
+.qr-code-checkbox {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    z-index: 5;
 }
 
 .qr-code-card:hover {
@@ -644,6 +783,20 @@ html.dark-mode .qr-code-card:hover {
 
     .qr-codes-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .filter-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .search-box {
+        grid-column: auto;
+    }
+
+    .bulk-actions-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
 }
 
@@ -930,6 +1083,7 @@ csvForm.addEventListener('submit', async (e) => {
 });
 
 // Load QR Codes
+let allQRCodes = [];
 async function loadQRCodes() {
     try {
         const response = await fetch('{{ url_for("qr_mgmt.get_qr_codes") }}');
@@ -939,33 +1093,16 @@ async function loadQRCodes() {
         const totalCount = document.getElementById('total-qr-count');
 
         if (data.success && data.qr_codes.length > 0) {
+            allQRCodes = data.qr_codes;
             totalCount.textContent = data.count;
-            container.innerHTML = '';
-
-            data.qr_codes.forEach(qr => {
-                const card = document.createElement('div');
-                card.className = 'qr-code-card';
-                card.setAttribute('data-school-id', qr.school_id);
-                card.innerHTML = `
-                    <div class="qr-code-content">
-                        <img src="data:image/png;base64,${qr.qr_image}" alt="QR Code" class="qr-code-img">
-                    </div>
-                    <div class="qr-code-info">
-                        <div class="qr-code-id">${qr.school_id}</div>
-                        <div class="qr-code-name">${qr.name}</div>
-                    </div>
-                    <div class="qr-code-actions">
-                        <button class="btn btn-small btn-secondary" onclick="downloadSingleQR('${qr.school_id}')">
-                            ⬇️ Download
-                        </button>
-                        <button class="btn btn-small btn-danger" onclick="deleteQRCode('${qr.school_id}')">
-                            🗑️ Delete
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+            
+            // Populate filter dropdowns
+            populateFilterOptions();
+            
+            // Display QR codes
+            displayQRCodes(data.qr_codes);
         } else {
+            allQRCodes = [];
             totalCount.textContent = '0';
             container.innerHTML = `
                 <div class="empty-state">
@@ -978,6 +1115,225 @@ async function loadQRCodes() {
         console.error('Error loading QR codes:', error);
     }
 }
+
+// Compare function to get filtered QR codes
+function getFilteredQRCodes() {
+    const searchTerm = document.getElementById('search-qr').value.toLowerCase();
+    const sectionFilter = document.getElementById('section-filter').value;
+    const yearFilter = document.getElementById('year-filter').value;
+
+    return allQRCodes.filter(qr => {
+        const matchesSearch = !searchTerm || 
+            qr.school_id.toLowerCase().includes(searchTerm) || 
+            qr.name.toLowerCase().includes(searchTerm);
+        
+        const matchesSection = !sectionFilter || qr.section === sectionFilter;
+        const matchesYear = !yearFilter || qr.year === yearFilter;
+
+        return matchesSearch && matchesSection && matchesYear;
+    });
+}
+
+// Populate filter options
+function populateFilterOptions() {
+    const sections = new Set();
+    const years = new Set();
+
+    allQRCodes.forEach(qr => {
+        if (qr.section) sections.add(qr.section);
+        if (qr.year) years.add(qr.year);
+    });
+
+    // Populate section filter
+    const sectionFilter = document.getElementById('section-filter');
+    sections.forEach(section => {
+        if (![...sectionFilter.options].map(o => o.value).includes(section)) {
+            const option = document.createElement('option');
+            option.value = section;
+            option.textContent = section;
+            sectionFilter.appendChild(option);
+        }
+    });
+
+    // Populate year filter
+    const yearFilter = document.getElementById('year-filter');
+    [...years].sort().forEach(year => {
+        if (![...yearFilter.options].map(o => o.value).includes(year)) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        }
+    });
+}
+
+// Display QR codes
+function displayQRCodes(qrCodes) {
+    const container = document.getElementById('qr-codes-container');
+    const filteredCount = document.getElementById('filtered-qr-count');
+
+    if (qrCodes.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>No QR codes match your filters</p>
+            </div>
+        `;
+        filteredCount.textContent = '0';
+        return;
+    }
+
+    filteredCount.textContent = qrCodes.length;
+    container.innerHTML = '';
+
+    qrCodes.forEach(qr => {
+        const card = document.createElement('div');
+        card.className = 'qr-code-card';
+        card.setAttribute('data-school-id', qr.school_id);
+        card.innerHTML = `
+            <input type="checkbox" class="qr-code-checkbox select-qr-checkbox" data-school-id="${qr.school_id}">
+            <div class="qr-code-content">
+                <img src="data:image/png;base64,${qr.qr_image}" alt="QR Code" class="qr-code-img">
+            </div>
+            <div class="qr-code-info">
+                <div class="qr-code-id">${qr.school_id}</div>
+                <div class="qr-code-name">${qr.name}</div>
+                ${qr.section ? `<div class="qr-code-section" style="font-size: 0.85em; color: var(--navbar-text); margin-top: 4px;">Section: ${qr.section}</div>` : ''}
+            </div>
+            <div class="qr-code-actions">
+                <button class="btn btn-small btn-secondary" onclick="downloadSingleQR('${qr.school_id}')">
+                    ⬇️ Download
+                </button>
+                <button class="btn btn-small btn-danger" onclick="deleteQRCode('${qr.school_id}')">
+                    🗑️ Delete
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+        
+        // Add checkbox event listener
+        const checkbox = card.querySelector('.select-qr-checkbox');
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+            updateSelectionUI();
+        });
+    });
+
+    updateSelectionUI();
+}
+
+// Update selection UI
+function updateSelectionUI() {
+    const selectedCount = document.querySelectorAll('.select-qr-checkbox:checked').length;
+    const selectedCountEl = document.getElementById('selected-qr-count');
+    const bulkActionsToolbar = document.getElementById('bulk-actions');
+    const bulkDeleteBtn = document.getElementById('delete-selected-btn');
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+
+    selectedCountEl.textContent = selectedCount;
+
+    if (selectedCount > 0) {
+        bulkActionsToolbar.style.display = 'flex';
+        bulkDeleteBtn.style.display = 'block';
+        document.getElementById('selection-info').textContent = `${selectedCount} QR code${selectedCount !== 1 ? 's' : ''} selected`;
+    } else {
+        bulkActionsToolbar.style.display = 'none';
+        bulkDeleteBtn.style.display = 'none';
+        selectAllCheckbox.checked = false;
+    }
+
+    // Update select all checkbox state
+    const allCheckboxes = document.querySelectorAll('.select-qr-checkbox');
+    const allChecked = allCheckboxes.length > 0 && [...allCheckboxes].every(cb => cb.checked);
+    selectAllCheckbox.checked = allChecked;
+}
+
+// Select All functionality
+document.getElementById('select-all-checkbox').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.select-qr-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+        const card = checkbox.closest('.qr-code-card');
+        if (this.checked) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    });
+    updateSelectionUI();
+});
+
+// Filter handlers
+document.getElementById('search-qr').addEventListener('input', () => {
+    displayQRCodes(getFilteredQRCodes());
+});
+
+document.getElementById('section-filter').addEventListener('change', () => {
+    displayQRCodes(getFilteredQRCodes());
+});
+
+document.getElementById('year-filter').addEventListener('change', () => {
+    displayQRCodes(getFilteredQRCodes());
+});
+
+// Clear filters
+document.getElementById('clear-filters-btn').addEventListener('click', () => {
+    document.getElementById('search-qr').value = '';
+    document.getElementById('section-filter').value = '';
+    document.getElementById('year-filter').value = '';
+    displayQRCodes(allQRCodes);
+});
+
+// Delete Selected
+document.getElementById('delete-selected-btn').addEventListener('click', async () => {
+    const selectedCheckboxes = document.querySelectorAll('.select-qr-checkbox:checked');
+    const schoolIds = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-school-id'));
+
+    if (schoolIds.length === 0) {
+        alert('Please select at least one QR code to delete');
+        return;
+    }
+
+    showDeleteModal(
+        `${schoolIds.length} QR code${schoolIds.length !== 1 ? 's' : ''}`,
+        async () => {
+            try {
+                const response = await fetch('{{ url_for("qr_mgmt.delete_bulk_qr") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ school_ids: schoolIds })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success';
+                    alertDiv.textContent = `Successfully deleted ${data.deleted_count} QR code${data.deleted_count !== 1 ? 's' : ''}`;
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                    
+                    setTimeout(loadQRCodes, 500);
+                } else {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger';
+                    alertDiv.textContent = 'Error: ' + data.error;
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+                }
+            } catch (error) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger';
+                alertDiv.textContent = 'Error: ' + error.message;
+                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+            }
+        },
+        `ID${schoolIds.length !== 1 ? 's' : ''}: ${schoolIds.join(', ')}`
+    );
+});
 
 // Download single QR code
 function downloadSingleQR(schoolId) {
