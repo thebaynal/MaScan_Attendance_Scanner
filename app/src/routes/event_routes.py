@@ -19,11 +19,41 @@ def list_events():
     
     events = db.get_all_events()
     
+    # Sort events: today first, then past (descending), then future (ascending)
+    today = datetime.now().date()
+    
+    today_events = []
+    past_events = []
+    future_events = []
+    
+    for event in events:
+        try:
+            # Parse event date (assuming format: YYYY-MM-DD)
+            event_date = datetime.strptime(event[2], '%Y-%m-%d').date()
+            
+            if event_date == today:
+                today_events.append(event)
+            elif event_date < today:
+                past_events.append(event)
+            else:
+                future_events.append(event)
+        except ValueError:
+            # If date parsing fails, put event in future events
+            future_events.append(event)
+    
+    # Sort past events by date descending (most recent first)
+    past_events.sort(key=lambda e: datetime.strptime(e[2], '%Y-%m-%d'), reverse=True)
+    
+    # Sort future events by date ascending (soonest first)
+    future_events.sort(key=lambda e: datetime.strptime(e[2], '%Y-%m-%d'))
+    
     return render_template(
         'events/list.html',
         username=username,
         user_role=user[3],
-        events=events
+        today_events=today_events,
+        past_events=past_events,
+        future_events=future_events
     )
 
 

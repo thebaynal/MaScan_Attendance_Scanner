@@ -16,54 +16,174 @@
         {% endif %}
     </div>
 
-    {% if events %}
+    {% if today_events or past_events or future_events %}
     <div class="events-container">
-        <div class="events-grid">
-            {% for event in events %}
-            <div class="event-card" data-event-id="{{ event[0] }}">
-                <div class="event-card-header">
-                    <div class="event-date-badge">
-                        <span class="date-text">{{ event[2] }}</span>
-                    </div>
-                    {% if user_role == 'admin' %}
-                    <div class="event-menu-btn" onclick="toggleEventMenu(this)">
-                        <span>⋮</span>
-                        <div class="event-menu-dropdown">
-                            <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
-                                ✏️ Edit Event
-                            </a>
-                            <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
-                                📥 Export PDF
-                            </a>
-                            <a href="#" class="menu-item danger" onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
-                                🗑️ Delete
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
+        <!-- TODAY'S EVENTS SECTION -->
+        {% if today_events %}
+        <div class="events-section">
+            <div class="section-header today-section">
+                <div class="section-title-wrapper">
+                    <span class="section-badge today-badge">🔴 LIVE</span>
+                    <h2 class="section-title">Today's Events</h2>
                 </div>
-
-                <div class="event-card-body">
-                    <h3 class="event-title">{{ event[1] }}</h3>
-                    {% if event[3] %}
-                    <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}</p>
-                    {% else %}
-                    <p class="event-description placeholder">No description</p>
-                    {% endif %}
-                </div>
-
-                <div class="event-card-footer">
-                    <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
-                        <span>View Details</span>
-                        <span class="arrow">→</span>
-                    </a>
-                    <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}" class="event-action secondary">
-                        <span>Attendance</span>
-                    </a>
-                </div>
+                <p class="section-subtitle">{{ today_events|length }} event{{ 's' if today_events|length != 1 else '' }} happening now</p>
             </div>
-            {% endfor %}
+            <div class="events-grid">
+                {% for event in today_events %}
+                <div class="event-card today-event" data-event-id="{{ event[0] }}">
+                    <div class="event-card-header">
+                        <div class="event-date-badge">
+                            <span class="date-text">{{ event[2] }}</span>
+                        </div>
+                        {% if user_role == 'admin' %}
+                        <div class="event-menu-btn" onclick="toggleEventMenu(this)">
+                            <span>⋮</span>
+                            <div class="event-menu-dropdown">
+                                <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
+                                    ✏️ Edit Event
+                                </a>
+                                <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
+                                    📥 Export PDF
+                                </a>
+                                <a href="#" class="menu-item danger" onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-body">
+                        <h3 class="event-title">{{ event[1] }}</h3>
+                        {% if event[3] %}
+                        <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}</p>
+                        {% else %}
+                        <p class="event-description placeholder">No description</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-footer">
+                        <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
+                            <span>View Details</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}" class="event-action secondary">
+                            <span>Attendance</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
+
+        <!-- DIVIDER -->
+        {% if past_events or future_events %}
+        <div class="section-divider"></div>
+        {% endif %}
+        {% endif %}
+
+        <!-- PAST & FUTURE EVENTS SECTION -->
+        {% if past_events or future_events %}
+        <div class="events-section">
+            <div class="section-header other-section">
+                <div class="section-title-wrapper">
+                    <span class="section-badge other-badge">📅</span>
+                    <h2 class="section-title">Other Events</h2>
+                </div>
+                <p class="section-subtitle">{{ past_events|length + future_events|length }} event{{ 's' if (past_events|length + future_events|length) != 1 else '' }}</p>
+            </div>
+            <div class="events-grid">
+                {% for event in past_events %}
+                <div class="event-card past-event" data-event-id="{{ event[0] }}">
+                    <div class="event-card-header">
+                        <div class="event-date-badge">
+                            <span class="date-text">{{ event[2] }}</span>
+                        </div>
+                        {% if user_role == 'admin' %}
+                        <div class="event-menu-btn" onclick="toggleEventMenu(this)">
+                            <span>⋮</span>
+                            <div class="event-menu-dropdown">
+                                <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
+                                    ✏️ Edit Event
+                                </a>
+                                <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
+                                    📥 Export PDF
+                                </a>
+                                <a href="#" class="menu-item danger" onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-body">
+                        <h3 class="event-title">{{ event[1] }}</h3>
+                        {% if event[3] %}
+                        <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}</p>
+                        {% else %}
+                        <p class="event-description placeholder">No description</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-footer">
+                        <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
+                            <span>View Details</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}" class="event-action secondary">
+                            <span>Attendance</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for event in future_events %}
+                <div class="event-card future-event" data-event-id="{{ event[0] }}">
+                    <div class="event-card-header">
+                        <div class="event-date-badge">
+                            <span class="date-text">{{ event[2] }}</span>
+                        </div>
+                        {% if user_role == 'admin' %}
+                        <div class="event-menu-btn" onclick="toggleEventMenu(this)">
+                            <span>⋮</span>
+                            <div class="event-menu-dropdown">
+                                <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
+                                    ✏️ Edit Event
+                                </a>
+                                <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
+                                    📥 Export PDF
+                                </a>
+                                <a href="#" class="menu-item danger" onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-body">
+                        <h3 class="event-title">{{ event[1] }}</h3>
+                        {% if event[3] %}
+                        <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}</p>
+                        {% else %}
+                        <p class="event-description placeholder">No description</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-footer">
+                        <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
+                            <span>View Details</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}" class="event-action secondary">
+                            <span>Attendance</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
     {% else %}
     <div class="empty-state">
@@ -332,6 +452,138 @@ html.dark-mode .event-card:hover {
     margin: 0 0 30px 0;
     color: var(--navbar-text);
     font-size: 1rem;
+}
+
+/* Section Styling */
+.events-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.section-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+}
+
+.section-header.today-section {
+    border-bottom: 3px solid rgba(42, 115, 255, 0.2);
+    background: linear-gradient(135deg, rgba(42, 115, 255, 0.05), rgba(102, 126, 234, 0.05));
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+}
+
+html.dark-mode .section-header.today-section {
+    background: linear-gradient(135deg, rgba(42, 115, 255, 0.08), rgba(102, 126, 234, 0.08));
+}
+
+.section-header.other-section {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.section-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.section-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.section-title::before {
+    content: '';
+}
+
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.section-badge.today-badge {
+    background: rgba(255, 67, 67, 0.15);
+    color: #ff4343;
+}
+
+.section-badge.other-badge {
+    background: rgba(42, 115, 255, 0.15);
+    color: var(--primary-color);
+}
+
+.section-subtitle {
+    margin: 0;
+    color: var(--navbar-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Event Card Styling by Type */
+.event-card.today-event {
+    border-left: 4px solid #ff4343;
+}
+
+.event-card.today-event::before {
+    background: linear-gradient(90deg, #ff4343, rgba(255, 67, 67, 0.3));
+    height: 3px;
+}
+
+.event-card.today-event:hover {
+    box-shadow: 0 12px 24px rgba(255, 67, 67, 0.15);
+    border-color: rgba(255, 67, 67, 0.6);
+}
+
+html.dark-mode .event-card.today-event:hover {
+    box-shadow: 0 12px 24px rgba(255, 67, 67, 0.25);
+}
+
+.event-card.past-event,
+.event-card.future-event {
+    opacity: 0.95;
+}
+
+.event-card.past-event {
+    border-left: 4px solid var(--navbar-text);
+}
+
+.event-card.future-event {
+    border-left: 4px solid var(--primary-color);
+}
+
+/* Section Divider */
+.section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--border-color) 10%, var(--border-color) 90%, transparent);
+    margin: 40px 0;
+    animation: expandWidth 0.6s ease-out;
+}
+
+@keyframes expandWidth {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive */
