@@ -16,54 +16,185 @@
         {% endif %}
     </div>
 
-    {% if events %}
+    {% if today_events or past_events or future_events %}
     <div class="events-container">
-        <div class="events-grid">
-            {% for event in events %}
-            <div class="event-card" data-event-id="{{ event[0] }}">
-                <div class="event-card-header">
-                    <div class="event-date-badge">
-                        <span class="date-text">{{ event[2] }}</span>
-                    </div>
-                    {% if user_role == 'admin' %}
-                    <div class="event-menu-btn" onclick="toggleEventMenu(this)">
-                        <span>⋮</span>
-                        <div class="event-menu-dropdown">
-                            <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
-                                ✏️ Edit Event
-                            </a>
-                            <a href="{{ url_for('event.export_event', event_id=event[0]) }}" class="menu-item">
-                                📥 Export PDF
-                            </a>
-                            <a href="#" class="menu-item danger" onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
-                                🗑️ Delete
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
+        <!-- TODAY'S EVENTS SECTION -->
+        {% if today_events %}
+        <div class="events-section">
+            <div class="section-header today-section">
+                <div class="section-title-wrapper">
+                    <span class="section-badge today-badge">🔴 LIVE</span>
+                    <h2 class="section-title">Today's Events</h2>
                 </div>
-
-                <div class="event-card-body">
-                    <h3 class="event-title">{{ event[1] }}</h3>
-                    {% if event[3] %}
-                    <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}</p>
-                    {% else %}
-                    <p class="event-description placeholder">No description</p>
-                    {% endif %}
-                </div>
-
-                <div class="event-card-footer">
-                    <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
-                        <span>View Details</span>
-                        <span class="arrow">→</span>
-                    </a>
-                    <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}" class="event-action secondary">
-                        <span>Attendance</span>
-                    </a>
-                </div>
+                <p class="section-subtitle">{{ today_events|length }} event{{ 's' if today_events|length != 1 else '' }}
+                    happening now</p>
             </div>
-            {% endfor %}
+            <div class="events-grid">
+                {% for event in today_events %}
+                <div class="event-card today-event" data-event-id="{{ event[0] }}">
+                    <div class="event-card-header">
+                        <div class="event-date-badge">
+                            <span class="date-text">{{ event[2] }}</span>
+                        </div>
+                        {% if user_role == 'admin' %}
+                        <div class="event-menu-btn" onclick="toggleEventMenu(this)">
+                            <span>⋮</span>
+                            <div class="event-menu-dropdown">
+                                <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
+                                    ✏️ Edit Event
+                                </a>
+                                <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
+                                    📥 Export PDF
+                                </a>
+                                <a href="#" class="menu-item danger"
+                                    onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-body">
+                        <h3 class="event-title">{{ event[1] }}</h3>
+                        {% if event[3] %}
+                        <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}
+                        </p>
+                        {% else %}
+                        <p class="event-description placeholder">No description</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-footer">
+                        <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
+                            <span>View Details</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}"
+                            class="event-action secondary">
+                            <span>Attendance</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
+
+        <!-- DIVIDER -->
+        {% if past_events or future_events %}
+        <div class="section-divider"></div>
+        {% endif %}
+        {% endif %}
+
+        <!-- PAST & FUTURE EVENTS SECTION -->
+        {% if past_events or future_events %}
+        <div class="events-section">
+            <div class="section-header other-section">
+                <div class="section-title-wrapper">
+                    <span class="section-badge other-badge">📅</span>
+                    <h2 class="section-title">Other Events</h2>
+                </div>
+                <p class="section-subtitle">{{ past_events|length + future_events|length }} event{{ 's' if
+                    (past_events|length + future_events|length) != 1 else '' }}</p>
+            </div>
+            <div class="events-grid">
+                {% for event in past_events %}
+                <div class="event-card past-event" data-event-id="{{ event[0] }}">
+                    <div class="event-card-header">
+                        <div class="event-date-badge">
+                            <span class="date-text">{{ event[2] }}</span>
+                        </div>
+                        {% if user_role == 'admin' %}
+                        <div class="event-menu-btn" onclick="toggleEventMenu(this)">
+                            <span>⋮</span>
+                            <div class="event-menu-dropdown">
+                                <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
+                                    ✏️ Edit Event
+                                </a>
+                                <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
+                                    📥 Export PDF
+                                </a>
+                                <a href="#" class="menu-item danger"
+                                    onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-body">
+                        <h3 class="event-title">{{ event[1] }}</h3>
+                        {% if event[3] %}
+                        <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}
+                        </p>
+                        {% else %}
+                        <p class="event-description placeholder">No description</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-footer">
+                        <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
+                            <span>View Details</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}"
+                            class="event-action secondary">
+                            <span>Attendance</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for event in future_events %}
+                <div class="event-card future-event" data-event-id="{{ event[0] }}">
+                    <div class="event-card-header">
+                        <div class="event-date-badge">
+                            <span class="date-text">{{ event[2] }}</span>
+                        </div>
+                        {% if user_role == 'admin' %}
+                        <div class="event-menu-btn" onclick="toggleEventMenu(this)">
+                            <span>⋮</span>
+                            <div class="event-menu-dropdown">
+                                <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
+                                    ✏️ Edit Event
+                                </a>
+                                <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
+                                    📥 Export PDF
+                                </a>
+                                <a href="#" class="menu-item danger"
+                                    onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-body">
+                        <h3 class="event-title">{{ event[1] }}</h3>
+                        {% if event[3] %}
+                        <p class="event-description">{{ event[3][:100] }}{% if event[3]|length > 100 %}...{% endif %}
+                        </p>
+                        {% else %}
+                        <p class="event-description placeholder">No description</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-card-footer">
+                        <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="event-action primary">
+                            <span>View Details</span>
+                            <span class="arrow">→</span>
+                        </a>
+                        <a href="{{ url_for('attendance.attendance_history', event_id=event[0]) }}"
+                            class="event-action secondary">
+                            <span>Attendance</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
     {% else %}
     <div class="empty-state">
@@ -78,334 +209,476 @@
 </div>
 
 <style>
-.events-wrapper {
-    animation: fadeIn 0.5s ease-in;
-}
+    .events-wrapper {
+        animation: fadeIn 0.5s ease-in;
+    }
 
-.events-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    gap: 20px;
-}
-
-.header-content h1 {
-    margin: 0 0 8px 0;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--text-color);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.header-content p {
-    margin: 0;
-    color: var(--navbar-text);
-    font-size: 1rem;
-}
-
-.events-container {
-    margin-bottom: 40px;
-}
-
-.events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-}
-
-.event-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow);
-    position: relative;
-}
-
-.event-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-}
-
-.event-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(42, 115, 255, 0.15);
-    border-color: var(--primary-color);
-}
-
-html.dark-mode .event-card:hover {
-    box-shadow: 0 12px 24px rgba(42, 115, 255, 0.25);
-}
-
-.event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.event-date-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    background: linear-gradient(135deg, rgba(42, 115, 255, 0.1), rgba(102, 126, 234, 0.1));
-    border-radius: 8px;
-    border: 1px solid rgba(42, 115, 255, 0.2);
-}
-
-.date-text {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-.event-menu-btn {
-    position: relative;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: background-color 0.2s;
-}
-
-.event-menu-btn:hover {
-    background-color: var(--input-bg);
-}
-
-.event-menu-btn > span {
-    font-size: 1.5rem;
-    color: var(--navbar-text);
-    display: block;
-}
-
-.event-menu-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    z-index: 100;
-    min-width: 180px;
-    overflow: hidden;
-    margin-top: 4px;
-}
-
-.event-menu-dropdown.active {
-    display: block;
-    animation: slideInUp 0.2s ease-out;
-}
-
-.menu-item {
-    display: block;
-    padding: 12px 16px;
-    color: var(--text-color);
-    text-decoration: none;
-    transition: all 0.2s;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
-}
-
-.menu-item:last-child {
-    border-bottom: none;
-}
-
-.menu-item:hover {
-    background-color: var(--input-bg);
-    color: var(--primary-color);
-}
-
-.menu-item.danger:hover {
-    color: var(--danger-color);
-}
-
-.event-card-body {
-    padding: 20px;
-    flex-grow: 1;
-}
-
-.event-title {
-    margin: 0 0 12px 0;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--text-color);
-    line-height: 1.3;
-}
-
-.event-description {
-    margin: 0;
-    font-size: 0.95rem;
-    color: var(--navbar-text);
-    line-height: 1.5;
-}
-
-.event-description.placeholder {
-    color: var(--border-color);
-    font-style: italic;
-}
-
-.event-card-footer {
-    padding: 16px 20px;
-    display: flex;
-    gap: 8px;
-    border-top: 1px solid var(--border-color);
-}
-
-.event-action {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-}
-
-.event-action.primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-}
-
-.event-action.primary:hover {
-    transform: translateX(2px);
-    box-shadow: 0 4px 12px rgba(42, 115, 255, 0.3);
-}
-
-.event-action.secondary {
-    background: var(--input-bg);
-    color: var(--primary-color);
-    border-color: var(--border-color);
-}
-
-.event-action.secondary:hover {
-    background: rgba(42, 115, 255, 0.1);
-    border-color: var(--primary-color);
-}
-
-.arrow {
-    transition: transform 0.2s;
-}
-
-.event-action.primary:hover .arrow {
-    transform: translateX(3px);
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    display: block;
-    animation: bounce 2s infinite;
-}
-
-.empty-state h2 {
-    margin: 0 0 12px 0;
-    font-size: 1.8rem;
-    color: var(--text-color);
-}
-
-.empty-state p {
-    margin: 0 0 30px 0;
-    color: var(--navbar-text);
-    font-size: 1rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
     .events-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .btn-lg {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .events-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        gap: 20px;
     }
 
     .header-content h1 {
-        font-size: 1.8rem;
+        margin: 0 0 8px 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-color);
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
-}
 
-/* Script-triggered dropdown menu */
+    .header-content p {
+        margin: 0;
+        color: var(--navbar-text);
+        font-size: 1rem;
+    }
+
+    .events-container {
+        margin-bottom: 40px;
+    }
+
+    .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .event-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow);
+        position: relative;
+    }
+
+    .event-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .event-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(42, 115, 255, 0.15);
+        border-color: var(--primary-color);
+    }
+
+    html.dark-mode .event-card:hover {
+        box-shadow: 0 12px 24px rgba(42, 115, 255, 0.25);
+    }
+
+    .event-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .event-date-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.1), rgba(102, 126, 234, 0.1));
+        border-radius: 8px;
+        border: 1px solid rgba(42, 115, 255, 0.2);
+    }
+
+    .date-text {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .event-menu-btn {
+        position: relative;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: background-color 0.2s;
+    }
+
+    .event-menu-btn:hover {
+        background-color: var(--input-bg);
+    }
+
+    .event-menu-btn>span {
+        font-size: 1.5rem;
+        color: var(--navbar-text);
+        display: block;
+    }
+
+    .event-menu-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        z-index: 100;
+        min-width: 180px;
+        overflow: hidden;
+        margin-top: 4px;
+    }
+
+    .event-menu-dropdown.active {
+        display: block;
+        animation: slideInUp 0.2s ease-out;
+    }
+
+    .menu-item {
+        display: block;
+        padding: 12px 16px;
+        color: var(--text-color);
+        text-decoration: none;
+        transition: all 0.2s;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.95rem;
+    }
+
+    .menu-item:last-child {
+        border-bottom: none;
+    }
+
+    .menu-item:hover {
+        background-color: var(--input-bg);
+        color: var(--primary-color);
+    }
+
+    .menu-item.danger:hover {
+        color: var(--danger-color);
+    }
+
+    .event-card-body {
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .event-title {
+        margin: 0 0 12px 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-color);
+        line-height: 1.3;
+    }
+
+    .event-description {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--navbar-text);
+        line-height: 1.5;
+    }
+
+    .event-description.placeholder {
+        color: var(--border-color);
+        font-style: italic;
+    }
+
+    .event-card-footer {
+        padding: 16px 20px;
+        display: flex;
+        gap: 8px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .event-action {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .event-action.primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+
+    .event-action.primary:hover {
+        transform: translateX(2px);
+        box-shadow: 0 4px 12px rgba(42, 115, 255, 0.3);
+    }
+
+    .event-action.secondary {
+        background: var(--input-bg);
+        color: var(--primary-color);
+        border-color: var(--border-color);
+    }
+
+    .event-action.secondary:hover {
+        background: rgba(42, 115, 255, 0.1);
+        border-color: var(--primary-color);
+    }
+
+    .arrow {
+        transition: transform 0.2s;
+    }
+
+    .event-action.primary:hover .arrow {
+        transform: translateX(3px);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+        animation: bounce 2s infinite;
+    }
+
+    .empty-state h2 {
+        margin: 0 0 12px 0;
+        font-size: 1.8rem;
+        color: var(--text-color);
+    }
+
+    .empty-state p {
+        margin: 0 0 30px 0;
+        color: var(--navbar-text);
+        font-size: 1rem;
+    }
+
+    /* Section Styling */
+    .events-section {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .section-header {
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+    }
+
+    .section-header.today-section {
+        border-bottom: 3px solid rgba(42, 115, 255, 0.2);
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.05), rgba(102, 126, 234, 0.05));
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 28px;
+    }
+
+    html.dark-mode .section-header.today-section {
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.08), rgba(102, 126, 234, 0.08));
+    }
+
+    .section-header.other-section {
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 20px;
+    }
+
+    .section-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .section-title {
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+    .section-title::before {
+        content: '';
+    }
+
+    .section-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .section-badge.today-badge {
+        background: rgba(255, 67, 67, 0.15);
+        color: #ff4343;
+    }
+
+    .section-badge.other-badge {
+        background: rgba(42, 115, 255, 0.15);
+        color: var(--primary-color);
+    }
+
+    .section-subtitle {
+        margin: 0;
+        color: var(--navbar-text);
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* Event Card Styling by Type */
+    .event-card.today-event {
+        border-left: 4px solid #ff4343;
+    }
+
+    .event-card.today-event::before {
+        background: linear-gradient(90deg, #ff4343, rgba(255, 67, 67, 0.3));
+        height: 3px;
+    }
+
+    .event-card.today-event:hover {
+        box-shadow: 0 12px 24px rgba(255, 67, 67, 0.15);
+        border-color: rgba(255, 67, 67, 0.6);
+    }
+
+    html.dark-mode .event-card.today-event:hover {
+        box-shadow: 0 12px 24px rgba(255, 67, 67, 0.25);
+    }
+
+    .event-card.past-event,
+    .event-card.future-event {
+        opacity: 0.95;
+    }
+
+    .event-card.past-event {
+        border-left: 4px solid var(--navbar-text);
+    }
+
+    .event-card.future-event {
+        border-left: 4px solid var(--primary-color);
+    }
+
+    /* Section Divider */
+    .section-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--border-color) 10%, var(--border-color) 90%, transparent);
+        margin: 40px 0;
+        animation: expandWidth 0.6s ease-out;
+    }
+
+    @keyframes expandWidth {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .events-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .btn-lg {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .events-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .header-content h1 {
+            font-size: 1.8rem;
+        }
+    }
+
+    /* Script-triggered dropdown menu */
 </style>
 
 <script>
-function toggleEventMenu(element) {
-    const dropdown = element.querySelector('.event-menu-dropdown');
-    const wasActive = dropdown.classList.contains('active');
-    
-    // Close all other dropdowns
-    document.querySelectorAll('.event-menu-dropdown.active').forEach(el => {
-        if (el !== dropdown) {
-            el.classList.remove('active');
-        }
-    });
-    
-    // Toggle current dropdown
-    if (!wasActive) {
-        dropdown.classList.add('active');
-        
-        // Close on outside click
-        const closeOnClickOutside = (e) => {
-            if (!element.contains(e.target)) {
-                dropdown.classList.remove('active');
-                document.removeEventListener('click', closeOnClickOutside);
-            }
-        };
-        document.addEventListener('click', closeOnClickOutside);
-    } else {
-        dropdown.classList.remove('active');
-    }
-}
+    function toggleEventMenu(element) {
+        const dropdown = element.querySelector('.event-menu-dropdown');
+        const wasActive = dropdown.classList.contains('active');
 
-function deleteEvent(event, eventId, deleteUrl) {
-    event.preventDefault();
-    
-    // Get event name from the card
-    const eventCard = event.target.closest('.event-card');
-    const eventName = eventCard ? eventCard.querySelector('.event-title').textContent : 'this event';
-    const eventDate = eventCard ? eventCard.querySelector('.date-text').textContent : '';
-    
-    showDeleteModal(
-        eventName,
-        () => {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = deleteUrl;
-            document.body.appendChild(form);
-            form.submit();
-        },
-        eventDate ? `Date: ${eventDate}` : null
-    );
-}
+        // Close all other dropdowns
+        document.querySelectorAll('.event-menu-dropdown.active').forEach(el => {
+            if (el !== dropdown) {
+                el.classList.remove('active');
+            }
+        });
+
+        // Toggle current dropdown
+        if (!wasActive) {
+            dropdown.classList.add('active');
+
+            // Close on outside click
+            const closeOnClickOutside = (e) => {
+                if (!element.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeOnClickOutside);
+                }
+            };
+            document.addEventListener('click', closeOnClickOutside);
+        } else {
+            dropdown.classList.remove('active');
+        }
+    }
+
+    function deleteEvent(event, eventId, deleteUrl) {
+        event.preventDefault();
+
+        // Get event name from the card
+        const eventCard = event.target.closest('.event-card');
+        const eventName = eventCard ? eventCard.querySelector('.event-title').textContent : 'this event';
+        const eventDate = eventCard ? eventCard.querySelector('.date-text').textContent : '';
+
+        showDeleteModal(
+            eventName,
+            () => {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = deleteUrl;
+                document.body.appendChild(form);
+                form.submit();
+            },
+            eventDate ? `Date: ${eventDate}` : null
+        );
+    }
+
+    async function exportEventPDF(eventId) {
+        // This is now handled in modal.js
+        if (window.exportEventPDF) {
+            return window.exportEventPDF(eventId);
+        }
+    }
 </script>
+
 {% endblock %}

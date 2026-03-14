@@ -1,25 +1,20 @@
 /**
- * Delete Confirmation Modal
- * Provides a modern, accessible modal dialog for delete confirmations
+ * Modal Management
+ * Provides dialogs for confirmation and alerts
  */
 
 let deleteCallback = null;
 
 /**
  * Show the delete confirmation modal
- * @param {string} itemName - The name of the item being deleted
- * @param {Function} onConfirm - Callback function to execute on confirmation
- * @param {string} itemDetails - Optional additional details about the item
  */
 function showDeleteModal(itemName, onConfirm, itemDetails = null) {
     const modal = document.getElementById('deleteConfirmModal');
     const messageElement = document.getElementById('modalMessage');
     const itemInfoElement = document.getElementById('modalItemInfo');
 
-    // Set the message
     messageElement.textContent = `Are you sure you want to delete "${itemName}"? This action cannot be undone.`;
 
-    // Show item details if provided
     if (itemDetails) {
         itemInfoElement.textContent = itemDetails;
         itemInfoElement.style.display = 'block';
@@ -27,69 +22,104 @@ function showDeleteModal(itemName, onConfirm, itemDetails = null) {
         itemInfoElement.style.display = 'none';
     }
 
-    // Store the callback
     deleteCallback = onConfirm;
-
-    // Show the modal
     modal.classList.add('active');
 
-    // Focus the delete button for better UX
     setTimeout(() => {
         const deleteBtn = modal.querySelector('.modal-btn-delete');
-        deleteBtn.focus();
+        if (deleteBtn) deleteBtn.focus();
     }, 100);
 
-    // Add keyboard event listener for Escape key
     document.addEventListener('keydown', handleModalKeydown);
 }
 
-/**
- * Close the delete confirmation modal
- */
 function closeDeleteModal() {
     const modal = document.getElementById('deleteConfirmModal');
     modal.classList.remove('active');
     deleteCallback = null;
-    document.removeEventListener('keydown', handleModalKeydown);
 }
 
-/**
- * Confirm the delete action
- */
 function confirmDelete() {
-    if (deleteCallback && typeof deleteCallback === 'function') {
-        deleteCallback();
-    }
+    if (deleteCallback) deleteCallback();
     closeDeleteModal();
 }
 
 /**
- * Handle keyboard events in the modal
+ * Alert Modal Functions
  */
-function handleModalKeydown(event) {
-    const modal = document.getElementById('deleteConfirmModal');
-    if (!modal.classList.contains('active')) {
-        return;
-    }
+function showAlertModal(title, message, icon = '⚠️') {
+    const modal = document.getElementById('alertModal');
+    if (!modal) return;
 
-    if (event.key === 'Escape') {
-        closeDeleteModal();
-    } else if (event.key === 'Enter') {
-        event.preventDefault();
-        confirmDelete();
-    }
+    document.getElementById('alertModalTitle').textContent = title;
+    document.getElementById('alertModalMessage').textContent = message;
+    document.getElementById('alertModalIcon').textContent = icon;
+    
+    modal.classList.add('active');
+    document.addEventListener('keydown', handleModalKeydown);
+}
+
+function closeAlertModal() {
+    const modal = document.getElementById('alertModal');
+    if (modal) modal.classList.remove('active');
 }
 
 /**
- * Close modal when clicking on the backdrop
+ * PDF Export Logic
  */
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('deleteConfirmModal');
-    if (modal) {
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeDeleteModal();
+async function exportEventPDF(eventId) {
+    try {
+        const response = await fetch(`/events/${eventId}/export-api`);
+        
+        if (!response.ok) {
+            let errorMsg = 'Export failed';
+            let detailMsg = 'Unable to export PDF at this time.';
+            
+            try {
+                const data = await response.json();
+                errorMsg = data.error || errorMsg;
+                detailMsg = data.message || detailMsg;
+            } catch (e) {
+                // Fallback if not JSON
             }
-        });
+            
+            showAlertModal(errorMsg, detailMsg, '❌');
+            return;
+        }
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `attendance_event_${eventId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+        
+    } catch (error) {
+        showAlertModal('Network Error', 'Failed to connect to the server. Please try again.', '📡');
     }
+}
+
+function handleModalKeydown(event) {
+    if (event.key === 'Escape') {
+        closeDeleteModal();
+        closeAlertModal();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Backdrop clicks to close
+    ['deleteConfirmModal', 'alertModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    if (id === 'deleteConfirmModal') closeDeleteModal();
+                    else closeAlertModal();
+                }
+            });
+        }
+    });
 });

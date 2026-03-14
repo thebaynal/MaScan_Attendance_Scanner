@@ -27,9 +27,12 @@ def home():
     users = db._execute("SELECT * FROM users", fetch_all=True) or []
     total_users = len(users)
     
-    # Get recent attendance
+    # Get recent attendance with event names
     recent_attendance = db._execute(
-        """SELECT * FROM attendance ORDER BY timestamp DESC LIMIT 10""",
+        """SELECT a.event_id, a.user_id, a.user_name, a.timestamp, a.status, a.time_slot, e.name as event_name
+           FROM attendance a
+           LEFT JOIN events e ON a.event_id = e.id
+           ORDER BY a.timestamp DESC LIMIT 10""",
         fetch_all=True
     ) or []
     

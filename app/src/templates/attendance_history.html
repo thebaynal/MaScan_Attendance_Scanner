@@ -17,7 +17,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Employee ID</th>
+                    <th>ID Number</th>
                     <th>Name</th>
                     <th>Marked At</th>
                 </tr>
@@ -27,7 +27,12 @@
                 <tr>
                     <td>{{ record[1] }}</td>
                     <td>{{ record[2] }}</td>
-                    <td>{{ record[3] }}</td>
+                    <td>
+                        {% set ts = record[3].split('T') %}
+                        {% set time = ts[1].split('.')[0] %}
+                        {% set date_parts = ts[0].split('-') %}
+                        {{ time }} - {{ date_parts[2] }}/{{ date_parts[1] }}/{{ date_parts[0] }}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -43,7 +48,7 @@
     <div class="actions">
         <a href="{{ url_for('event.view_event', event_id=event[0]) }}" class="btn btn-secondary">Back to Event</a>
         {% if user_role == 'admin' %}
-        <a href="{{ url_for('event.export_event', event_id=event[0]) }}" class="btn btn-primary">Export PDF</a>
+        <a href="#" onclick="exportEventPDF('{{ event[0] }}'); return false;" class="btn btn-primary">Export PDF</a>
         {% endif %}
     </div>
 </div>

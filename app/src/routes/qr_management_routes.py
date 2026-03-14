@@ -191,7 +191,6 @@ def generate_single():
         data = request.get_json()
         
         school_id = data.get('school_id')
-        name = data.get('name')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
         middle_initial = data.get('middle_initial', '')
@@ -200,9 +199,26 @@ def generate_single():
         course = data.get('course', '')
         
         # Validate required fields
-        if not school_id or not name:
-            return jsonify({'success': False, 'message': 'School ID and Name are required'}), 400
-            
+        required_fields = {
+            'school_id': school_id,
+            'first_name': first_name,
+            'last_name': last_name,
+            'course': course,
+            'year_level': year_level,
+            'section': section
+        }
+        
+        missing_fields = [k.replace('_', ' ').title() for k, v in required_fields.items() if not v or not str(v).strip()]
+        if missing_fields:
+            return jsonify({'success': False, 'message': f'Required fields missing: {", ".join(missing_fields)}'}), 400
+        
+        # Construct full name from individual fields
+        name_parts = [first_name.strip()]
+        if middle_initial and middle_initial.strip():
+            name_parts.append(f"{middle_initial.strip()}.")
+        name_parts.append(last_name.strip())
+        name = " ".join(name_parts)
+        
         # Check if student already exists
         existing = db._execute(
             "SELECT school_id FROM students_qrcodes WHERE school_id = ?",

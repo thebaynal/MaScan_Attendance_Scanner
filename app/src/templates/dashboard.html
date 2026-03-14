@@ -81,8 +81,13 @@
             {% for record in recent_attendance[:10] %}
             <tr>
                 <td>{{ record[2] }}</td>
-                <td>{{ record[0] }}</td>
-                <td>{{ record[3] }}</td>
+                <td>{{ record[6] }}</td>
+                <td>
+                    {% set ts = record[3].split('T') %}
+                    {% set time = ts[1].split('.')[0] %}
+                    {% set date_parts = ts[0].split('-') %}
+                    {{ time }} - {{ date_parts[2] }}/{{ date_parts[1] }}/{{ date_parts[0] }}
+                </td>
                 <td><span class="badge badge-success">{{ record[4] }}</span></td>
             </tr>
             {% endfor %}
