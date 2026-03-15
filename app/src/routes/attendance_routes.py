@@ -10,6 +10,19 @@ attendance_bp = Blueprint('attendance', __name__, url_prefix='/scan')
 db = Database()
 
 
+def _is_mobile_view() -> bool:
+    """Determine whether to render mobile scanner template."""
+    forced_view = (request.args.get('view') or '').strip().lower()
+    if forced_view == 'mobile':
+        return True
+    if forced_view == 'desktop':
+        return False
+
+    user_agent = (request.user_agent.string or '').lower()
+    mobile_markers = ['android', 'iphone', 'ipad', 'ipod', 'mobile', 'webview']
+    return any(marker in user_agent for marker in mobile_markers)
+
+
 @attendance_bp.route('/')
 @login_required
 def scanner():
@@ -22,8 +35,10 @@ def scanner():
     all_events = db.get_all_events()
     events = [event for event in all_events if event[2] == today]
     
+    scanner_template = 'scanner_mobile.html' if _is_mobile_view() else 'scanner.html'
+
     return render_template(
-        'scanner.html',
+        scanner_template,
         username=username,
         user_role=user[3],
         events=events

@@ -28,7 +28,9 @@ function updateThemeIcon() {
     if (!themeToggle) return;
     
     const isDarkMode = document.documentElement.classList.contains('dark-mode');
-    themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+    themeToggle.innerHTML = isDarkMode
+        ? '<i class="fa-regular fa-sun" aria-hidden="true"></i>'
+        : '<i class="fa-regular fa-moon" aria-hidden="true"></i>';
     themeToggle.style.animation = 'spin 0.4s ease-out';
     setTimeout(() => {
         themeToggle.style.animation = '';

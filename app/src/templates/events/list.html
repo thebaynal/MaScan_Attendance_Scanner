@@ -23,7 +23,7 @@
         <div class="events-section">
             <div class="section-header today-section">
                 <div class="section-title-wrapper">
-                    <span class="section-badge today-badge">🔴 LIVE</span>
+                    <span class="section-badge today-badge"><i class="fa-solid fa-circle" aria-hidden="true"></i> LIVE</span>
                     <h2 class="section-title">Today's Events</h2>
                 </div>
                 <p class="section-subtitle">{{ today_events|length }} event{{ 's' if today_events|length != 1 else '' }}
@@ -41,14 +41,14 @@
                             <span>⋮</span>
                             <div class="event-menu-dropdown">
                                 <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
-                                    ✏️ Edit Event
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Edit Event
                                 </a>
                                 <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
-                                    📥 Export PDF
+                                    <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Export PDF
                                 </a>
                                 <a href="#" class="menu-item danger"
                                     onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
-                                    🗑️ Delete
+                                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i> Delete
                                 </a>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
         <div class="events-section">
             <div class="section-header other-section">
                 <div class="section-title-wrapper">
-                    <span class="section-badge other-badge">📅</span>
+                    <span class="section-badge other-badge"><i class="fa-regular fa-calendar" aria-hidden="true"></i></span>
                     <h2 class="section-title">Other Events</h2>
                 </div>
                 <p class="section-subtitle">{{ past_events|length + future_events|length }} event{{ 's' if
@@ -109,14 +109,14 @@
                             <span>⋮</span>
                             <div class="event-menu-dropdown">
                                 <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
-                                    ✏️ Edit Event
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Edit Event
                                 </a>
                                 <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
-                                    📥 Export PDF
+                                    <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Export PDF
                                 </a>
                                 <a href="#" class="menu-item danger"
                                     onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
-                                    🗑️ Delete
+                                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i> Delete
                                 </a>
                             </div>
                         </div>
@@ -156,14 +156,14 @@
                             <span>⋮</span>
                             <div class="event-menu-dropdown">
                                 <a href="{{ url_for('event.edit_event', event_id=event[0]) }}" class="menu-item">
-                                    ✏️ Edit Event
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Edit Event
                                 </a>
                                 <a href="#" class="menu-item" onclick="exportEventPDF('{{ event[0] }}'); return false;">
-                                    📥 Export PDF
+                                    <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Export PDF
                                 </a>
                                 <a href="#" class="menu-item danger"
                                     onclick="deleteEvent(event, '{{ event[0] }}', '{{ url_for('event.delete_event', event_id=event[0]) }}')">
-                                    🗑️ Delete
+                                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i> Delete
                                 </a>
                             </div>
                         </div>
@@ -198,7 +198,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-        <div class="empty-icon">📅</div>
+        <div class="empty-icon"><i class="fa-regular fa-calendar" aria-hidden="true"></i></div>
         <h2>No Events Yet</h2>
         <p>Start creating events to begin tracking attendance</p>
         {% if user_role == 'admin' %}
@@ -250,14 +250,19 @@
 
     .event-card {
         background: var(--card-bg);
-        border: 1px solid var(--border-color);
+        border: 1px solid rgba(42, 115, 255, 0.16);
         border-radius: 12px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: var(--shadow);
+        box-shadow: 0 6px 18px rgba(18, 45, 99, 0.08);
         position: relative;
+    }
+
+    html.dark-mode .event-card {
+        border-color: rgba(98, 145, 255, 0.25);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
     }
 
     .event-card::before {
@@ -273,7 +278,7 @@
     .event-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 24px rgba(42, 115, 255, 0.15);
-        border-color: var(--primary-color);
+        border-color: rgba(42, 115, 255, 0.45);
     }
 
     html.dark-mode .event-card:hover {
@@ -285,7 +290,7 @@
         justify-content: space-between;
         align-items: flex-start;
         padding: 16px 20px;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid rgba(42, 115, 255, 0.12);
     }
 
     .event-date-badge {
@@ -393,7 +398,7 @@
         padding: 16px 20px;
         display: flex;
         gap: 8px;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid rgba(42, 115, 255, 0.12);
     }
 
     .event-action {
@@ -476,7 +481,7 @@
     }
 
     .section-header.today-section {
-        border-bottom: 3px solid rgba(42, 115, 255, 0.2);
+        border: 1px solid rgba(42, 115, 255, 0.22);
         background: linear-gradient(135deg, rgba(42, 115, 255, 0.05), rgba(102, 126, 234, 0.05));
         padding: 24px;
         border-radius: 12px;
@@ -488,8 +493,15 @@
     }
 
     .section-header.other-section {
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 20px;
+        border: 1px solid rgba(42, 115, 255, 0.16);
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.02), rgba(42, 115, 255, 0.01));
+        border-radius: 12px;
+        padding: 20px 24px;
+    }
+
+    html.dark-mode .section-header.other-section {
+        border-color: rgba(98, 145, 255, 0.22);
+        background: linear-gradient(135deg, rgba(42, 115, 255, 0.06), rgba(42, 115, 255, 0.03));
     }
 
     .section-title-wrapper {
@@ -539,7 +551,7 @@
 
     /* Event Card Styling by Type */
     .event-card.today-event {
-        border-left: 4px solid #ff4343;
+        border-left: 2px solid #ff4343;
     }
 
     .event-card.today-event::before {
@@ -562,16 +574,16 @@
     }
 
     .event-card.past-event {
-        border-left: 4px solid var(--navbar-text);
+        border-left: 2px solid rgba(108, 117, 125, 0.8);
     }
 
     .event-card.future-event {
-        border-left: 4px solid var(--primary-color);
+        border-left: 2px solid rgba(42, 115, 255, 0.9);
     }
 
     /* Section Divider */
     .section-divider {
-        height: 2px;
+        height: 1px;
         background: linear-gradient(90deg, transparent, var(--border-color) 10%, var(--border-color) 90%, transparent);
         margin: 40px 0;
         animation: expandWidth 0.6s ease-out;

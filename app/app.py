@@ -14,7 +14,7 @@ from flask_app import create_app
 
 if __name__ == '__main__':
     app = create_app()
-    
+
     # Configuration
     debug_mode = os.getenv('DEBUG', 'True').lower() == 'true'
     host = os.getenv('HOST', '0.0.0.0')

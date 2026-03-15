@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Scanner - Mobile{% endblock %}
+
+{% block content %}
+<div class="mobile-scanner">
+    <div class="mobile-head">
+        <h1><i class="fa-solid fa-qrcode" aria-hidden="true"></i> Scanner</h1>
+        <p>Optimized for quick attendance marking on mobile.</p>
+    </div>
+
+    <div class="mobile-controls card-like">
+        <div class="field">
+            <label for="event-select">Event</label>
+            <select id="event-select" required>
+                <option value="">-- Choose event --</option>
+                {% for event in events %}
+                <option value="{{ event[0] }}">{{ event[1] }} ({{ event[2] }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="time-slot">Time Slot</label>
+            <select id="time-slot">
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="lunch">Lunch</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card-like scanner-shell">
+        <div class="scanner-shell-head">
+            <div>
+                <h2><i class="fa-solid fa-camera" aria-hidden="true"></i> Live Scanner</h2>
+                <p>Camera starts automatically when an event is selected.</p>
+            </div>
+        </div>
+
+        <div id="qr-reader"></div>
+
+        <div class="scanner-controls">
+            <button id="switch-camera-btn" class="btn btn-secondary btn-small" style="display: none;">
+                <i class="fa-solid fa-rotate" aria-hidden="true"></i> Switch
+            </button>
+            <button id="native-scan-btn" class="btn btn-primary btn-small" style="display: none;">
+                <i class="fa-solid fa-camera" aria-hidden="true"></i> Fullscreen Scan
+            </button>
+            <div id="scanner-status" class="scanner-status">Ready to scan...</div>
+        </div>
+        <div id="last-scanned-indicator" class="last-scanned-indicator" style="display:none;"></div>
+    </div>
+
+    <details class="card-like fallback-box">
+        <summary><i class="fa-solid fa-keyboard" aria-hidden="true"></i> Manual Input</summary>
+        <div class="manual-row">
+            <input type="text" id="qr-input" placeholder="Paste QR value">
+            <button type="button" id="submit-btn" class="btn btn-primary">Submit</button>
+        </div>
+    </details>
+
+    <div class="card-like list-shell">
+        <div class="list-header">
+            <h2><i class="fa-regular fa-rectangle-list" aria-hidden="true"></i> Marked</h2>
+            <span class="count" id="attendance-count">0</span>
+        </div>
+        <div class="list-wrap">
+            <table id="attendance-table" class="table compact-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="attendance-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+
+<style>
+.mobile-scanner {
+    max-width: 620px;
+    margin: 0 auto;
+    display: grid;
+    gap: 14px;
+}
+
+.mobile-head {
+    text-align: left;
+    padding: 8px 2px 0;
+}
+
+.mobile-head h1 {
+    margin: 0;
+    font-size: 1.45em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mobile-head p {
+    margin: 8px 0 0;
+    color: var(--navbar-text);
+    font-size: 0.95em;
+    max-width: 34ch;
+}
+
+.card-like {
+    background: var(--card-bg);
+    border: 1px solid rgba(42, 115, 255, 0.12);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 12px 28px rgba(14, 29, 58, 0.06);
+}
+
+.mobile-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background:
+        radial-gradient(circle at top right, rgba(42, 115, 255, 0.08), transparent 38%),
+        linear-gradient(180deg, rgba(42, 115, 255, 0.03), transparent 55%);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.field label {
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.field select,
+.manual-row input {
+    border: 1px solid rgba(42, 115, 255, 0.12);
+    border-radius: 14px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    padding: 14px 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.scanner-shell {
+    background: linear-gradient(180deg, rgba(42, 115, 255, 0.03), transparent 55%);
+}
+
+.scanner-shell-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.scanner-shell-head h2 {
+    margin: 0;
+    font-size: 1.02em;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.scanner-shell-head p {
+    margin: 6px 0 0;
+    font-size: 0.86em;
+    line-height: 1.45;
+    color: var(--navbar-text);
+    max-width: 30ch;
+}
+
+#qr-reader {
+    width: min(100%, 330px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    border: 2px solid var(--primary-color);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #111;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.scanner-controls {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.scanner-status {
+    grid-column: 1 / -1;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(42, 115, 255, 0.12), rgba(42, 115, 255, 0.05));
+    color: var(--primary-color);
+    font-size: 0.86em;
+    border: 1px solid rgba(42, 115, 255, 0.16);
+    line-height: 1.45;
+}
+
+.last-scanned-indicator {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(40, 167, 69, 0.28);
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.04));
+    color: #28a745;
+    display: flex;
+    gap: 8px;
+    font-size: 0.88em;
+    font-weight: 600;
+    align-items: center;
+}
+
+.last-scanned-indicator.warning {
+    border-color: rgba(255, 140, 0, 0.38);
+    color: #d17700;
+    background: rgba(255, 193, 7, 0.12);
+}
+
+.fallback-box summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--navbar-text);
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.manual-row {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.list-header h2 {
+    margin: 0;
+    font-size: 1em;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.count {
+    border-radius: 999px;
+    min-width: 38px;
+    text-align: center;
+    padding: 6px 12px;
+    background: rgba(40, 167, 69, 0.12);
+    color: #28a745;
+    font-weight: 700;
+}
+
+.list-wrap {
+    max-height: 330px;
+    overflow: auto;
+}
+
+.compact-table th,
+.compact-table td {
+    font-size: 0.82em;
+    padding: 8px;
+}
+
+@media (max-width: 540px) {
+    .card-like {
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    .mobile-controls {
+        grid-template-columns: 1fr;
+    }
+
+    #qr-reader {
+        width: 100%;
+    }
+
+    .manual-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

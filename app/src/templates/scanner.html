@@ -11,6 +11,7 @@
 <div class="scanner-container">
 
     <h1>QR Code Scanner</h1>
+    <p class="scanner-subtitle">Fast, focused attendance marking for live events</p>
 
 
 
@@ -64,11 +65,21 @@
 
             <div class="scanner-area">
 
+                <div class="scanner-panel-header">
+                    <h2><i class="fa-solid fa-qrcode" aria-hidden="true"></i> Live Scanner</h2>
+                    <span class="scan-pill">Real-time</span>
+                </div>
+
                 <div id="qr-reader" style="width: 100%; max-width: 500px; margin: 0 auto;"></div>
 
                 <div class="scanner-controls">
+                    <label for="camera-select" class="camera-select-label" style="display: none;">Camera</label>
+                    <select id="camera-select" class="camera-select" style="display: none;" aria-label="Select camera"></select>
                     <button id="switch-camera-btn" class="btn btn-secondary btn-small" style="display: none;">
-                        🔄 Switch Camera
+                        <i class="fa-solid fa-rotate" aria-hidden="true"></i> Switch Camera
+                    </button>
+                    <button id="native-scan-btn" class="btn btn-primary btn-small" style="display: none; margin-left: 8px;">
+                        <i class="fa-solid fa-camera" aria-hidden="true"></i> Use Native Scanner
                     </button>
                     <div id="scanner-status" class="scanner-status">Ready to scan...</div>
                 </div>
@@ -79,6 +90,9 @@
 
 
 
+            <details class="advanced-panel">
+                <summary><i class="fa-solid fa-sliders" aria-hidden="true"></i> Manual / fallback input</summary>
+
             <div class="scanner-input">
 
                 <input type="text" id="qr-input" placeholder="Or paste QR code data here" autofocus>
@@ -86,6 +100,7 @@
                 <button type="button" id="submit-btn" class="btn btn-primary">Submit</button>
 
             </div>
+            </details>
 
 
 
@@ -158,12 +173,19 @@
 <style>
     .scanner-container {
 
-        max-width: 1400px;
+        max-width: 1320px;
 
         margin: 0 auto;
 
         animation: fadeIn 0.5s ease-in;
 
+    }
+
+    .scanner-subtitle {
+        text-align: center;
+        margin: -12px 0 26px;
+        color: var(--navbar-text);
+        font-size: 0.98em;
     }
 
 
@@ -306,7 +328,7 @@
 
         border-radius: 8px;
 
-        padding: 20px;
+        padding: 20px 20px 14px;
 
         margin-bottom: 20px;
 
@@ -314,8 +336,36 @@
 
         box-shadow: var(--shadow);
 
+        border: 1px solid var(--border-color);
+
         animation: slideInUp 0.5s ease-out 0.1s backwards;
 
+    }
+
+    .scanner-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    .scanner-panel-header h2 {
+        margin: 0;
+        font-size: 1.05em;
+        color: var(--text-color);
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .scan-pill {
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(40, 167, 69, 0.4);
+        background: rgba(40, 167, 69, 0.1);
+        color: #1e8f4f;
+        font-size: 0.78em;
+        font-weight: 600;
     }
 
 
@@ -328,25 +378,68 @@
 
         overflow: hidden;
 
-        animation: pulse 2s ease-in-out infinite;
+        animation: scannerGlow 2.8s ease-in-out infinite;
 
+    }
+
+    @keyframes scannerGlow {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(42, 115, 255, 0.12);
+        }
+
+        50% {
+            box-shadow: 0 0 0 7px rgba(42, 115, 255, 0.02);
+        }
     }
 
 
 
     .scanner-controls {
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
         gap: 10px;
         margin-top: 15px;
     }
 
+    .camera-select-label {
+        font-size: 0.85em;
+        color: var(--navbar-text);
+        font-weight: 600;
+    }
+
+    .camera-select {
+        min-width: 230px;
+        padding: 10px 12px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-size: 0.92em;
+    }
+
+    .camera-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(42, 115, 255, 0.1);
+    }
+
     #switch-camera-btn {
-        width: 100%;
-        max-width: 200px;
-        margin: 0 auto;
+        min-width: 170px;
         display: none;
         /* Only show when scanner is active */
+    }
+
+    #native-scan-btn {
+        min-width: 190px;
+    }
+
+    #switch-camera-btn i,
+    #native-scan-btn i {
+        margin-right: 6px;
+        font-size: 0.9em;
     }
 
     .scanner-status {
@@ -364,7 +457,32 @@
         animation: fadeIn 0.3s ease-out;
 
         border-left: 3px solid var(--primary-color);
+        width: 100%;
+        font-size: 0.92em;
 
+    }
+
+    .advanced-panel {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+    }
+
+    .advanced-panel summary {
+        cursor: pointer;
+        list-style: none;
+        color: var(--navbar-text);
+        font-weight: 600;
+        font-size: 0.9em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .advanced-panel[open] summary {
+        margin-bottom: 10px;
     }
 
 
@@ -375,7 +493,7 @@
 
         gap: 10px;
 
-        margin-bottom: 30px;
+        margin-bottom: 0;
 
         animation: slideInUp 0.5s ease-out 0.2s backwards;
 
@@ -929,13 +1047,13 @@
 
     .last-scanned-indicator {
 
-        margin-top: 15px;
+        margin-top: 12px;
 
-        padding: 15px 20px;
+        padding: 11px 14px;
 
         background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.08));
 
-        border-left: 4px solid #28a745;
+        border-left: 3px solid #28a745;
 
         border-radius: 4px;
 
@@ -946,7 +1064,17 @@
         font-weight: 600;
 
         color: #28a745;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9em;
 
+    }
+
+    .last-scanned-indicator i {
+        width: 16px;
+        text-align: center;
+        flex-shrink: 0;
     }
 
 
@@ -1007,6 +1135,27 @@
 
             flex-direction: column;
 
+        }
+
+        .scanner-controls {
+            justify-content: stretch;
+        }
+
+        .camera-select {
+            width: 100%;
+            min-width: 0;
+        }
+
+        #switch-camera-btn,
+        #native-scan-btn {
+            width: 100%;
+        }
+
+        .advanced-panel {
+            position: sticky;
+            bottom: 8px;
+            z-index: 2;
+            box-shadow: var(--shadow);
         }
 
 

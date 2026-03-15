@@ -240,11 +240,21 @@ body {
     color: var(--navbar-text);
     font-weight: 500;
     font-size: 0.95em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     transition: all 0.3s ease;
     padding: 8px 12px;
     border-radius: 4px;
     position: relative;
     white-space: nowrap;
+}
+
+.nav-icon {
+    font-size: 0.9em;
+    width: 14px;
+    text-align: center;
+    opacity: 0.85;
 }
 
 .nav-link::after {
@@ -296,12 +306,20 @@ body {
 .theme-toggle {
     background: none;
     border: none;
-    font-size: 1.1em;
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 8px 12px;
     border-radius: 6px;
     color: var(--navbar-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+}
+
+.theme-toggle i {
+    font-size: 1em;
 }
 
 .theme-toggle:hover {
@@ -641,8 +659,11 @@ html.dark-mode .card:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
     flex-shrink: 0;
+}
+
+.modal-icon i {
+    font-size: 20px;
 }
 
 html.dark-mode .modal-icon {

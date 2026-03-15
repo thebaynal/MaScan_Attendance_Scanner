@@ -12,21 +12,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const timeSlotSelect = document.getElementById('time-slot');
     const submitBtn = document.getElementById('submit-btn');
     const qrInput = document.getElementById('qr-input');
+    const cameraSelect = document.getElementById('camera-select');
+
+    // Initialize scanner controls even before an event is selected.
+    setupNativeScanButton();
+    setupCameraSelector(cameraSelect);
+    setScannerStatus('Select an event to start scanning.');
 
     if (eventSelect) {
         eventSelect.addEventListener('change', function() {
             selectedEvent = this.value;
             if (!selectedEvent) {
+                stopScanner();
                 document.getElementById('qr-reader').innerHTML = '';
                 clearAttendanceTable();
+                setScannerStatus('Select an event to start scanning.');
             } else {
                 startQRScanner();
                 loadMarkedAttendees();
             }
         });
+
+        // Auto-start when an event is already selected (e.g., page restore/navigation).
+        selectedEvent = eventSelect.value || null;
     }
 
     if (timeSlotSelect) {
+        selectedTimeSlot = timeSlotSelect.value || 'morning';
         timeSlotSelect.addEventListener('change', function() {
             selectedTimeSlot = this.value;
             if (selectedEvent) {
@@ -46,17 +58,449 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    if (selectedEvent) {
+        startQRScanner();
+        loadMarkedAttendees();
+    }
+
+    // Restart stream when returning to the tab/page if scanner was active.
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && selectedEvent && !currentStream) {
+            startQRScanner();
+        }
+    });
+
+    // Always release camera resources when leaving the page.
+    window.addEventListener('beforeunload', stopScanner);
 });
 
 let currentStream = null;
 let currentFacingMode = 'environment'; // Default to back camera
 let scanInterval = null;
+let indicatorTimeoutId = null;
+let embeddedScannerBoundsHandlerAttached = false;
+let selectedCameraId = '';
+let availableCameras = [];
+
+function setScannerStatus(message) {
+    const statusText = document.getElementById('scanner-status');
+    if (statusText) {
+        statusText.textContent = message;
+    }
+}
+
+function hideScanIndicator() {
+    const indicator = document.getElementById('last-scanned-indicator');
+    if (indicator) {
+        indicator.style.display = 'none';
+    }
+    if (indicatorTimeoutId) {
+        clearTimeout(indicatorTimeoutId);
+        indicatorTimeoutId = null;
+    }
+}
+
+function setScanIndicator(type, message, timeoutMs = 2400) {
+    const indicator = document.getElementById('last-scanned-indicator');
+    if (!indicator) {
+        return;
+    }
+
+    const icon = document.createElement('i');
+    icon.setAttribute('aria-hidden', 'true');
+    icon.className = type === 'success' ? 'fa-regular fa-circle-check' : 'fa-solid fa-triangle-exclamation';
+
+    const text = document.createElement('span');
+    text.textContent = message;
+
+    indicator.className = type === 'success'
+        ? 'last-scanned-indicator'
+        : 'last-scanned-indicator warning';
+    indicator.innerHTML = '';
+    indicator.appendChild(icon);
+    indicator.appendChild(text);
+    indicator.style.display = 'flex';
+
+    if (indicatorTimeoutId) {
+        clearTimeout(indicatorTimeoutId);
+    }
+    indicatorTimeoutId = setTimeout(hideScanIndicator, timeoutMs);
+}
+
+function hasBrowserCameraSupport() {
+    return !!(
+        (navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function')
+        || navigator.getUserMedia
+        || navigator.webkitGetUserMedia
+        || navigator.mozGetUserMedia
+    );
+}
+
+function hasMediaDevicesApi() {
+    return !!(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function');
+}
+
+function getCameraSelectElement() {
+    return document.getElementById('camera-select');
+}
+
+function getCameraSelectLabelElement() {
+    return document.querySelector('.camera-select-label');
+}
+
+function isDesktopScannerPage() {
+    return !!getCameraSelectElement();
+}
+
+function supportsDeviceEnumeration() {
+    return !!(navigator.mediaDevices && typeof navigator.mediaDevices.enumerateDevices === 'function');
+}
+
+function requestBrowserCamera(constraints) {
+    if (hasMediaDevicesApi()) {
+        return navigator.mediaDevices.getUserMedia(constraints);
+    }
+
+    const legacyGetUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    if (!legacyGetUserMedia) {
+        return Promise.reject(new Error('Camera API unsupported'));
+    }
+
+    return new Promise((resolve, reject) => {
+        legacyGetUserMedia.call(navigator, constraints, resolve, reject);
+    });
+}
+
+async function refreshCameraDevices() {
+    if (!supportsDeviceEnumeration()) {
+        availableCameras = [];
+        renderCameraOptions();
+        return;
+    }
+
+    try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        availableCameras = devices.filter((device) => device.kind === 'videoinput');
+        renderCameraOptions();
+    } catch (error) {
+        console.warn('Failed to enumerate cameras:', error);
+        availableCameras = [];
+        renderCameraOptions();
+    }
+}
+
+function renderCameraOptions() {
+    const selectEl = getCameraSelectElement();
+    const labelEl = getCameraSelectLabelElement();
+    if (!selectEl) {
+        return;
+    }
+
+    const shouldShowPicker = isDesktopScannerPage() && availableCameras.length > 0;
+    selectEl.style.display = shouldShowPicker ? 'inline-block' : 'none';
+    if (labelEl) {
+        labelEl.style.display = shouldShowPicker ? 'inline-block' : 'none';
+    }
+
+    selectEl.innerHTML = '';
+    if (!shouldShowPicker) {
+        return;
+    }
+
+    availableCameras.forEach((camera, index) => {
+        const option = document.createElement('option');
+        option.value = camera.deviceId;
+        option.textContent = camera.label || `Camera ${index + 1}`;
+        selectEl.appendChild(option);
+    });
+
+    if (!selectedCameraId && availableCameras.length) {
+        selectedCameraId = availableCameras[0].deviceId;
+    }
+    selectEl.value = selectedCameraId;
+}
+
+function setupCameraSelector(cameraSelect) {
+    if (!cameraSelect) {
+        return;
+    }
+
+    cameraSelect.addEventListener('change', function() {
+        selectedCameraId = this.value;
+        if (selectedEvent) {
+            setScannerStatus('Switching camera...');
+            startQRScanner();
+        }
+    });
+
+    renderCameraOptions();
+}
+
+function hasAndroidNativeScannerBridge() {
+    return !!(window.MaScanAndroid && typeof window.MaScanAndroid.startNativeQrScan === 'function');
+}
+
+function hasAndroidEmbeddedScannerBridge() {
+    return !!(
+        window.MaScanAndroid
+        && typeof window.MaScanAndroid.canUseEmbeddedQrScan === 'function'
+        && typeof window.MaScanAndroid.startEmbeddedQrScan === 'function'
+        && typeof window.MaScanAndroid.updateEmbeddedQrScanBounds === 'function'
+        && typeof window.MaScanAndroid.stopEmbeddedQrScan === 'function'
+    );
+}
+
+function isAndroidWebViewContext() {
+    const ua = navigator.userAgent || '';
+    return /Android/i.test(ua) && (/\bwv\b/i.test(ua) || /Version\/\d+\.\d+/i.test(ua));
+}
+
+function getNativeScanButton() {
+    return document.getElementById('native-scan-btn');
+}
+
+function usesAndroidEmbeddedScanner() {
+    return isAndroidWebViewContext() && hasAndroidEmbeddedScannerBridge();
+}
+
+function getReaderBoundsPayload() {
+    const reader = document.getElementById('qr-reader');
+    if (!reader) {
+        return null;
+    }
+
+    const rect = reader.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    return {
+        left: Math.round((rect.left + window.scrollX) * dpr),
+        top: Math.round((rect.top + window.scrollY) * dpr),
+        width: Math.round(rect.width * dpr),
+        height: Math.round(rect.height * dpr)
+    };
+}
+
+function syncEmbeddedScannerBounds() {
+    if (!usesAndroidEmbeddedScanner()) {
+        return;
+    }
+
+    const bounds = getReaderBoundsPayload();
+    if (!bounds) {
+        return;
+    }
+
+    window.MaScanAndroid.updateEmbeddedQrScanBounds(
+        bounds.left,
+        bounds.top,
+        bounds.width,
+        bounds.height
+    );
+}
+
+function attachEmbeddedScannerBoundsHandlers() {
+    if (embeddedScannerBoundsHandlerAttached) {
+        return;
+    }
+
+    const syncSoon = () => window.requestAnimationFrame(syncEmbeddedScannerBounds);
+    window.addEventListener('resize', syncSoon, { passive: true });
+    embeddedScannerBoundsHandlerAttached = true;
+}
+
+function startAndroidEmbeddedScanner() {
+    const readerContainer = document.getElementById('qr-reader');
+    if (!readerContainer || !usesAndroidEmbeddedScanner()) {
+        return false;
+    }
+
+    const bounds = getReaderBoundsPayload();
+    if (!bounds) {
+        return false;
+    }
+
+    readerContainer.innerHTML = '';
+    setScannerStatus('Opening embedded camera...');
+    attachEmbeddedScannerBoundsHandlers();
+    window.MaScanAndroid.startEmbeddedQrScan(bounds.left, bounds.top, bounds.width, bounds.height);
+    window.requestAnimationFrame(syncEmbeddedScannerBounds);
+    return true;
+}
+
+function setupNativeScanButton() {
+    const nativeBtn = getNativeScanButton();
+    if (!nativeBtn) {
+        return;
+    }
+
+    nativeBtn.style.display = usesAndroidEmbeddedScanner() ? 'none' : (hasAndroidNativeScannerBridge() ? 'inline-block' : 'none');
+
+    if (!nativeBtn.onclick) {
+        nativeBtn.onclick = function() {
+            requestAndroidNativeScan('manual');
+        };
+    }
+}
+
+function requestAndroidNativeScan(source) {
+    if (!hasAndroidNativeScannerBridge()) {
+        return false;
+    }
+
+    try {
+        window.MaScanAndroid.startNativeQrScan();
+        setScannerStatus('Opening native scanner...');
+        if (source === 'fallback') {
+            setScanIndicator('warning', 'Web camera limited in this WebView. Switched to native scanner.');
+        }
+        return true;
+    } catch (error) {
+        console.error('Failed to invoke native scanner bridge:', error);
+        return false;
+    }
+}
+
+function getConstraintAttempts() {
+    if (selectedCameraId) {
+        return [
+            {
+                label: 'selected camera',
+                constraints: {
+                    video: {
+                        deviceId: { exact: selectedCameraId },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                }
+            },
+            {
+                label: 'selected camera (fallback)',
+                constraints: {
+                    video: {
+                        deviceId: selectedCameraId,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                }
+            },
+            {
+                label: 'any available camera',
+                constraints: {
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                }
+            }
+        ];
+    }
+
+    const preferred = currentFacingMode;
+    const fallback = preferred === 'environment' ? 'user' : 'environment';
+
+    return [
+        {
+            label: `${preferred} camera`,
+            constraints: {
+                video: {
+                    facingMode: { exact: preferred },
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            }
+        },
+        {
+            label: `${preferred} camera (preferred)`,
+            constraints: {
+                video: {
+                    facingMode: preferred,
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            }
+        },
+        {
+            label: `${fallback} camera fallback`,
+            constraints: {
+                video: {
+                    facingMode: fallback,
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            }
+        },
+        {
+            label: 'any available camera',
+            constraints: {
+                video: {
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            }
+        }
+    ];
+}
+
+async function acquireCameraStream() {
+    const attempts = getConstraintAttempts();
+    let lastError = null;
+
+    for (const attempt of attempts) {
+        try {
+            setScannerStatus(`Opening ${attempt.label}...`);
+            return await requestBrowserCamera(attempt.constraints);
+        } catch (err) {
+            lastError = err;
+        }
+    }
+
+    throw lastError || new Error('Unable to access any camera');
+}
 
 function startQRScanner() {
-    // Show switch camera button if browser supports it
+    setupNativeScanButton();
+
+    if (isDesktopScannerPage() && hasBrowserCameraSupport()) {
+        refreshCameraDevices();
+    }
+
+    if (usesAndroidEmbeddedScanner()) {
+        stopScanner();
+        const started = startAndroidEmbeddedScanner();
+        if (started) {
+            setScannerStatus('Scanning with embedded device camera');
+            const switchBtn = document.getElementById('switch-camera-btn');
+            if (switchBtn) {
+                switchBtn.style.display = 'none';
+            }
+            return;
+        }
+    }
+
+    // Keep embedded scanner as the primary path.
+    // On Android WebView + HTTP we still attempt getUserMedia first,
+    // and only fall back to native scanner if camera access fails.
+    if (isAndroidWebViewContext() && !window.isSecureContext) {
+        setScannerStatus('Trying embedded camera in WebView...');
+    }
+
+    if (!hasBrowserCameraSupport()) {
+        const insecureHint = !window.isSecureContext
+            ? 'Camera is blocked on non-secure pages. Open via localhost or HTTPS.'
+            : 'Your browser did not expose getUserMedia.';
+        setScannerStatus('Camera API unavailable in this browser');
+        showError(`${insecureHint} If you use Brave, allow camera permission for this site.`);
+        return;
+    }
+
+    if (!window.isSecureContext) {
+        setScannerStatus('HTTP context detected. Trying camera access...');
+    }
+
+    // Show switch button only on layouts without explicit camera picker.
     const switchBtn = document.getElementById('switch-camera-btn');
     if (switchBtn) {
-        switchBtn.style.display = 'inline-block';
+        switchBtn.style.display = isDesktopScannerPage() ? 'none' : 'inline-block';
         if (!switchBtn.onclick) {
             switchBtn.onclick = toggleCamera;
         }
@@ -64,14 +508,6 @@ function startQRScanner() {
 
     // Stop existing stream and interval
     stopScanner();
-
-    const constraints = {
-        video: {
-            facingMode: currentFacingMode,
-            width: { ideal: 640 },
-            height: { ideal: 480 }
-        }
-    };
 
     const video = document.createElement('video');
     const canvas = document.createElement('canvas');
@@ -85,11 +521,25 @@ function startQRScanner() {
 
     readerContainer.innerHTML = '';
     readerContainer.appendChild(video);
+    setScannerStatus(`Preparing ${currentFacingMode === 'user' ? 'front' : 'back'} camera...`);
 
-    navigator.mediaDevices.getUserMedia(constraints)
+    acquireCameraStream()
         .then(stream => {
             currentStream = stream;
             video.srcObject = stream;
+            video.play().catch(() => {
+                // Ignore autoplay errors; stream can still render when user interacts.
+            });
+
+            const activeTrack = stream.getVideoTracks()[0];
+            const trackLabel = activeTrack && activeTrack.label ? activeTrack.label : 'camera';
+            setScannerStatus(`Scanning with ${trackLabel}`);
+
+            if (activeTrack && activeTrack.getSettings && activeTrack.getSettings().deviceId) {
+                selectedCameraId = activeTrack.getSettings().deviceId;
+            }
+
+            refreshCameraDevices();
 
             scanInterval = setInterval(() => {
                 if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -115,6 +565,7 @@ function startQRScanner() {
                         if (code.data !== lastScannedCode || (now - lastScanTime > 3000)) {
                             lastScannedCode = code.data;
                             lastScanTime = now;
+                            setScannerStatus('QR detected, submitting...');
                             document.getElementById('qr-input').value = code.data;
                             submitQRCode();
                         }
@@ -124,7 +575,13 @@ function startQRScanner() {
         })
         .catch(err => {
             console.error('Camera access denied:', err);
-            showError('Camera access denied. Enter QR code manually.');
+            const errorName = err && err.name ? err.name : 'UnknownError';
+            const reason = err && err.message ? err.message : 'unknown error';
+            setScannerStatus('Camera unavailable');
+            const braveHint = !window.isSecureContext
+                ? 'Use localhost/HTTPS and allow camera permissions in Brave.'
+                : 'Check camera permission in Brave Site Settings.';
+            showError(`Camera unavailable (${errorName}: ${reason}). ${braveHint}`);
             if (switchBtn) switchBtn.style.display = 'none';
         });
 }
@@ -138,14 +595,15 @@ function stopScanner() {
         currentStream.getTracks().forEach(track => track.stop());
         currentStream = null;
     }
+
+    if (usesAndroidEmbeddedScanner()) {
+        window.MaScanAndroid.stopEmbeddedQrScan();
+    }
 }
 
 function toggleCamera() {
     currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
-    const statusText = document.getElementById('scanner-status');
-    if (statusText) {
-        statusText.textContent = `Switching to ${currentFacingMode === 'user' ? 'front' : 'back'} camera...`;
-    }
+    setScannerStatus(`Switching to ${currentFacingMode === 'user' ? 'front' : 'back'} camera...`);
     startQRScanner();
 }
 
@@ -164,19 +622,12 @@ function submitQRCode() {
     // Check if already scanned in this session
     const compositeKey = qrData + '-' + selectedTimeSlot;
     if (markedAttendees.has(qrData) || markedAttendees.has(compositeKey)) {
-        const indicator = document.getElementById('last-scanned-indicator');
-        indicator.className = 'last-scanned-indicator warning';
-        indicator.textContent = `⚠️ Already marked for ${selectedTimeSlot}`;
-        indicator.style.display = 'block';
+        setScanIndicator('warning', `Already marked for ${selectedTimeSlot}`);
 
         // Clear input
         document.getElementById('qr-input').value = '';
         document.getElementById('qr-input').focus();
 
-        // Keep visible for 3 seconds
-        setTimeout(() => {
-            indicator.style.display = 'none';
-        }, 3000);
         return;
     }
 
@@ -195,12 +646,8 @@ function markAttendance(qrData) {
         time_slot: selectedTimeSlot
     })
     .then(response => {
-        const indicator = document.getElementById('last-scanned-indicator');
-
         if (response.success) {
-            indicator.className = 'last-scanned-indicator';
-            indicator.textContent = `✓ ${response.user_name} marked for ${selectedTimeSlot}`;
-            indicator.style.display = 'block';
+            setScanIndicator('success', `${response.user_name} marked for ${selectedTimeSlot}`);
             
             // Track both by QR code and by composite key
             markedAttendees.add(qrData);
@@ -233,30 +680,12 @@ function markAttendance(qrData) {
             // Update count
             updateAttendanceCount();
 
-            // Hide indicator after 4 seconds
-            setTimeout(() => {
-                indicator.style.display = 'none';
-            }, 4000);
         } else {
-            indicator.className = 'last-scanned-indicator warning';
-            indicator.textContent = `⚠️ ${response.message}`;
-            indicator.style.display = 'block';
-            
-            // Keep visible for 3 seconds
-            setTimeout(() => {
-                indicator.style.display = 'none';
-            }, 3000);
+            setScanIndicator('warning', response.message);
         }
     })
     .catch(error => {
-        const indicator = document.getElementById('last-scanned-indicator');
-        indicator.className = 'last-scanned-indicator warning';
-        indicator.textContent = `⚠️ Error: ${error.message}`;
-        indicator.style.display = 'block';
-        
-        setTimeout(() => {
-            indicator.style.display = 'none';
-        }, 3000);
+        setScanIndicator('warning', `Error: ${error.message}`);
     });
 }
 
@@ -269,14 +698,7 @@ function updateAttendanceCount() {
 }
 
 function showError(message) {
-    const indicator = document.getElementById('last-scanned-indicator');
-    indicator.className = 'last-scanned-indicator warning';
-    indicator.textContent = `⚠️ ${message}`;
-    indicator.style.display = 'block';
-    
-    setTimeout(() => {
-        indicator.style.display = 'none';
-    }, 3000);
+    setScanIndicator('warning', message);
 }
 
 function clearAttendanceTable() {
