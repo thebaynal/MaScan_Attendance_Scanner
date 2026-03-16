@@ -1,0 +1,56 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.pytest_cache/
+.coverage
+.eggs/
+*.egg-info/
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Database (will be handled by external PostgreSQL)
+*.db
+*.sqlite
+*.sqlite3
+flask_session/
+
+# Environment files (will be set via container env vars)
+.env
+.env.local
+
+# Android app (not needed for web container)
+android-app/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Documentation
+README.md
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml

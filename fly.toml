@@ -1,0 +1,57 @@
+# Fly.io Deployment Configuration
+# Run 'fly launch' to generate this file interactively
+# Reference: https://fly.io/docs/reference/configuration/
+
+app = "mascan-attendance"
+primary_region = "dfw"
+
+[build]
+  image = "mascan-attendance:latest"
+
+[build.dockerfile]
+  dockerfile = "Dockerfile"
+
+[env]
+  FLASK_ENV = "production"
+  DEBUG = "False"
+
+[processes]
+  web = "cd app && gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 60 wsgi:app"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 5000
+  processes = ["web"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 512
+    soft_limit = 256
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.http_checks]
+    enabled = true
+    grace_period = "5s"
+    interval = "30s"
+    method = "get"
+    path = "/"
+    protocol = "http"
+    timeout = "10s"
+    tls_skip_verify = false
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+
+# Secrets (set these manually via 'fly secrets set')
+# - SECRET_KEY
+# - DATABASE_URL (for external PostgreSQL or Fly Postgres)

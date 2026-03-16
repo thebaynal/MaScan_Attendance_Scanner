@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
 import os
 from dotenv import load_dotenv
 from config.constants import *
@@ -10,22 +11,56 @@ from config.constants import *
 # Load environment variables
 load_dotenv()
 
+# Database instance
+db = SQLAlchemy()
+
 def create_app():
     """Create and configure Flask application."""
     app = Flask(__name__, 
                 template_folder=os.path.join(os.path.dirname(__file__), 'templates'),
                 static_folder=os.path.join(os.path.dirname(__file__), 'static'))
     
+    # Environment detection
+    is_production = os.getenv('FLASK_ENV', 'development').lower() == 'production'
+    
     # Configuration
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'mascan-attendance-secret-key-2024')
-    app.config['SESSION_TYPE'] = 'filesystem'
+    secret_key = os.getenv('SECRET_KEY')
+    if not secret_key:
+        if is_production:
+            raise ValueError('SECRET_KEY environment variable must be set in production')
+        secret_key = 'dev-secret-key-change-in-production'
+    
+    app.config['SECRET_KEY'] = secret_key
+    app.config['ENV'] = 'production' if is_production else 'development'
+    app.config['DEBUG'] = not is_production
+    
+    # Database configuration
+    database_url = os.getenv('DATABASE_URL')
+    if database_url:
+        # Fix postgres:// to postgresql:// for SQLAlchemy 2.0 compatibility
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        # Development fallback to SQLite
+        db_path = os.path.join(os.path.dirname(__file__), '..', 'mascan_attendance.db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Session configuration
+    app.config['SESSION_TYPE'] = 'sqlalchemy' if database_url else 'filesystem'
     app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file upload
     
     # Enable CORS
     CORS(app)
     
+    # Initialize database
+    db.init_app(app)
+    
     # Initialize Flask-Session
+    app.config['SESSION_SQLALCHEMY'] = db
     Session(app)
     
     # Register blueprints
@@ -46,8 +81,3 @@ def create_app():
     app.register_blueprint(qr_mgmt_bp)
     
     return app
-
-
-if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)

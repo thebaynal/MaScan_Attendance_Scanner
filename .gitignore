@@ -4,9 +4,9 @@ venv/
 ENV/
 env/
 
-#folders
+# Folders
 flask_session/
-
+instance/
 
 # Database files
 *.db
@@ -35,6 +35,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # IDE
 .vscode/
@@ -62,17 +63,16 @@ htmlcov/
 logs/
 
 # Local configuration
-instance/
 .webassets-cache
 
-# Logs
-*.log
+# Docker
+docker-compose.override.yml
 
-# OS
+# Deployment
 .DS_Store
 Thumbs.db
 
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Android app (not needed for web deployment)
+android-app/build/
+android-app/.gradle/
+android-app/local.properties
