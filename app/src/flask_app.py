@@ -2,7 +2,6 @@
 
 from flask import Flask
 from flask_cors import CORS
-from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 import os
 import secrets
@@ -40,6 +39,16 @@ def create_app():
     app.config['ENV'] = 'production' if is_production else 'development'
     app.config['DEBUG'] = not is_production
     
+    # Session configuration - use Flask's built-in cookie-based sessions
+    # (no storage required, works perfectly on ephemeral containers)
+    app.config['SESSION_COOKIE_SECURE'] = is_production  # Only send over HTTPS in production
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
+    
+    # File upload limit
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file upload
+    
     # Database configuration
     database_url = os.getenv('DATABASE_URL')
     if database_url:
@@ -54,20 +63,11 @@ def create_app():
     
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    # Session configuration - use simple cookie-based sessions
-    # (more reliable than database-backed for containerized deployments)
-    app.config['SESSION_TYPE'] = 'filesystem'
-    app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file upload
-    
     # Enable CORS
     CORS(app)
     
     # Initialize database
     db.init_app(app)
-    
-    # Initialize Flask-Session
-    Session(app)
     
     # Register blueprints
     from routes.auth_routes import auth_bp
