@@ -76,3 +76,4 @@ Thumbs.db
 android-app/build/
 android-app/.gradle/
 android-app/local.properties
+venv/
