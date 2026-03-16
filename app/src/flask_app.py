@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 import os
+import secrets
 from dotenv import load_dotenv
 from config.constants import *
 
@@ -23,12 +24,17 @@ def create_app():
     # Environment detection
     is_production = os.getenv('FLASK_ENV', 'development').lower() == 'production'
     
-    # Configuration
+    # Configuration - Generate SECRET_KEY if not provided
     secret_key = os.getenv('SECRET_KEY')
     if not secret_key:
         if is_production:
-            raise ValueError('SECRET_KEY environment variable must be set in production')
-        secret_key = 'dev-secret-key-change-in-production'
+            # Generate a random secret key for production if not set (for startup)
+            # NOTE: This will change on every app restart - set SECRET_KEY env var for persistent sessions
+            print("⚠️  WARNING: SECRET_KEY not set. Generating temporary key. Sessions will be lost on restart.")
+            print("    Set SECRET_KEY environment variable for persistent sessions.")
+            secret_key = secrets.token_hex(32)
+        else:
+            secret_key = 'dev-secret-key-change-in-production'
     
     app.config['SECRET_KEY'] = secret_key
     app.config['ENV'] = 'production' if is_production else 'development'
