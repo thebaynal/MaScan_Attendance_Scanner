@@ -7,7 +7,7 @@ services:
   - type: web
     name: mascan-attendance-web
     env: docker
-    region: us-east
+    region: oregon
     plan: free
     
     # Docker build settings
