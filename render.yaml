@@ -39,7 +39,3 @@ services:
     
     # Auto-deploy on push to main branch
     autoDeploy: true
-    
-    # Ensure web service depends on database
-    dependsOn:
-      - mascan-attendance-db
