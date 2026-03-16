@@ -54,8 +54,9 @@ def create_app():
     
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    # Session configuration
-    app.config['SESSION_TYPE'] = 'sqlalchemy' if database_url else 'filesystem'
+    # Session configuration - use simple cookie-based sessions
+    # (more reliable than database-backed for containerized deployments)
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file upload
     
@@ -66,7 +67,6 @@ def create_app():
     db.init_app(app)
     
     # Initialize Flask-Session
-    app.config['SESSION_SQLALCHEMY'] = db
     Session(app)
     
     # Register blueprints
